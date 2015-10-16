@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.frame.dao.bcollections.BCollectionsMapper" >
+  <resultMap id="BaseResultMap" type="com.frame.model.bcollections.BCollections" >
+    <id column="collect_id" property="collectId" jdbcType="INTEGER" />
+    <result column="collecte_user" property="collecteUser" jdbcType="INTEGER" />
+    <result column="publish_id" property="publishId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="is_cancel" property="isCancel" jdbcType="CHAR" />
+    <association property="bPublisher" javaType="com.frame.model.bpublisher.BPublisher">
+    	<id column="publish_id" property="publishId" jdbcType="INTEGER" />
+	    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+	    <result column="book_id" property="bookId" jdbcType="INTEGER" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="status" property="status" jdbcType="CHAR" />
+	    <result column="lend_time" property="lendTime" jdbcType="TIMESTAMP" />
+	    <result column="lend_end_time" property="lendEndTime" jdbcType="TIMESTAMP" />
+	    <result column="lend_days" property="lendDays" jdbcType="INTEGER" />
+	    <result column="lend_fee" property="lendFee" jdbcType="DOUBLE" />
+	    <result column="collectedCount" property="collectedCount" jdbcType="INTEGER" />
+	    <association property="book" javaType="com.frame.model.bbook.BBook">
+	    	<id column="book_id" property="bookId" jdbcType="INTEGER" />
+		    <result column="subtitle" property="subtitle" jdbcType="VARCHAR" />
+		    <result column="isbn" property="isbn" jdbcType="VARCHAR" />
+		    <result column="author" property="author" jdbcType="VARCHAR" />
+		    <result column="origin_title" property="originTitle" jdbcType="VARCHAR" />
+		    <result column="binding" property="binding" jdbcType="VARCHAR" />
+		    <result column="pages" property="pages" jdbcType="INTEGER" />
+		    <result column="images_small" property="imagesSmall" jdbcType="VARCHAR" />
+		    <result column="images_large" property="imagesLarge" jdbcType="VARCHAR" />
+		    <result column="images_medium" property="imagesMedium" jdbcType="VARCHAR" />
+		    <result column="publisher" property="publisher" jdbcType="VARCHAR" />
+		    <result column="title" property="title" jdbcType="VARCHAR" />
+		    <result column="author_intro" property="authorIntro" jdbcType="VARCHAR" />
+		    <result column="summary" property="summary" jdbcType="VARCHAR" />
+		    <result column="price" property="price" jdbcType="DOUBLE" />
+		    <result column="beizhu" property="beizhu" jdbcType="VARCHAR" />
+		    <result column="create_time" property="createTime" jdbcType="DATE" />
+		    <result column="is_pass" property="isPass" jdbcType="CHAR" />
+	    </association>
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    collect_id, collecte_user, publish_id, create_time, is_cancel
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_collections
+    where collect_id = #{collectId,jdbcType=INTEGER}
+  </select>
+  
+  <update id="cancelCollection" parameterType="java.lang.String">
+  	update b_collections set is_cancel = "T" where collect_id = #{collectId}
+  </update>
+  
+  <select id="getMyCollections" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  	select *,IFNULL(ccc.collectCount,0) collectedCount from b_collections c join b_publisher p on c.publish_id = p.publish_id and c.is_cancel = 'F'
+join b_book b on p.book_id = b.book_id
+left join (select count(*) as collectCount,publish_id as ppid from b_collections  GROUP BY publish_id) ccc on p.publish_id = ccc.ppid
+
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_collections
+    where collect_id = #{collectId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.frame.model.bcollections.BCollections" >
+    insert into b_collections (collect_id, collecte_user, publish_id, 
+      create_time, is_cancel)
+    values (#{collectId,jdbcType=INTEGER}, #{collecteUser,jdbcType=INTEGER}, #{publishId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{isCancel,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.frame.model.bcollections.BCollections" >
+    insert into b_collections
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="collectId != null" >
+        collect_id,
+      </if>
+      <if test="collecteUser != null" >
+        collecte_user,
+      </if>
+      <if test="publishId != null" >
+        publish_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="isCancel != null" >
+        is_cancel,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="collectId != null" >
+        #{collectId,jdbcType=INTEGER},
+      </if>
+      <if test="collecteUser != null" >
+        #{collecteUser,jdbcType=INTEGER},
+      </if>
+      <if test="publishId != null" >
+        #{publishId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isCancel != null" >
+        #{isCancel,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.frame.model.bcollections.BCollections" >
+    update b_collections
+    <set >
+      <if test="collecteUser != null" >
+        collecte_user = #{collecteUser,jdbcType=INTEGER},
+      </if>
+      <if test="publishId != null" >
+        publish_id = #{publishId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isCancel != null" >
+        is_cancel = #{isCancel,jdbcType=CHAR},
+      </if>
+    </set>
+    where collect_id = #{collectId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.frame.model.bcollections.BCollections" >
+    update b_collections
+    set collecte_user = #{collecteUser,jdbcType=INTEGER},
+      publish_id = #{publishId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      is_cancel = #{isCancel,jdbcType=CHAR}
+    where collect_id = #{collectId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.frame.dao.bcomment.BCommentMapper" >
+  <resultMap id="BaseResultMap" type="com.frame.model.bcomment.BComment" >
+    <id column="comment_id" property="commentId" jdbcType="INTEGER" />
+    <result column="comment" property="comment" jdbcType="VARCHAR" />
+    <result column="publisher" property="publisher" jdbcType="INTEGER" />
+    <result column="publisher_id" property="publisherId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="star_level" property="starLevel" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    comment_id, comment, publisher, publisher_id, create_time, star_level, status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_comment
+    where comment_id = #{commentId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_comment
+    where comment_id = #{commentId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.frame.model.bcomment.BComment" >
+    insert into b_comment (comment_id, comment, publisher, 
+      publisher_id, create_time, star_level, 
+      status)
+    values (#{commentId,jdbcType=INTEGER}, #{comment,jdbcType=VARCHAR}, #{publisher,jdbcType=INTEGER}, 
+      #{publisherId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{starLevel,jdbcType=INTEGER}, 
+      #{status,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.frame.model.bcomment.BComment" >
+    insert into b_comment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="commentId != null" >
+        comment_id,
+      </if>
+      <if test="comment != null" >
+        comment,
+      </if>
+      <if test="publisher != null" >
+        publisher,
+      </if>
+      <if test="publisherId != null" >
+        publisher_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="starLevel != null" >
+        star_level,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="commentId != null" >
+        #{commentId,jdbcType=INTEGER},
+      </if>
+      <if test="comment != null" >
+        #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="publisher != null" >
+        #{publisher,jdbcType=INTEGER},
+      </if>
+      <if test="publisherId != null" >
+        #{publisherId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="starLevel != null" >
+        #{starLevel,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.frame.model.bcomment.BComment" >
+    update b_comment
+    <set >
+      <if test="comment != null" >
+        comment = #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="publisher != null" >
+        publisher = #{publisher,jdbcType=INTEGER},
+      </if>
+      <if test="publisherId != null" >
+        publisher_id = #{publisherId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="starLevel != null" >
+        star_level = #{starLevel,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=CHAR},
+      </if>
+    </set>
+    where comment_id = #{commentId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.frame.model.bcomment.BComment" >
+    update b_comment
+    set comment = #{comment,jdbcType=VARCHAR},
+      publisher = #{publisher,jdbcType=INTEGER},
+      publisher_id = #{publisherId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      star_level = #{starLevel,jdbcType=INTEGER},
+      status = #{status,jdbcType=CHAR}
+    where comment_id = #{commentId,jdbcType=INTEGER}
+  </update>
+</mapper>

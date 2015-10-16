@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.frame.dao.bauthor.BAuthorMapper" >
+  <resultMap id="BaseResultMap" type="com.frame.model.bauthor.BAuthor" >
+    <id column="author_id" property="authorId" jdbcType="INTEGER" />
+    <result column="book_id" property="bookId" jdbcType="INTEGER" />
+    <result column="author_name" property="authorName" jdbcType="VARCHAR" />
+    <result column="author_profile" property="authorProfile" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    author_id, book_id, author_name, author_profile, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_author
+    where author_id = #{authorId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_author
+    where author_id = #{authorId,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="addAuthors"  parameterType="java.util.ArrayList">
+  	insert into b_author (author_id, book_id,author_name,author_profile,create_time)
+      values
+      <foreach collection="list" item="item" index="index" separator="," >  
+        (#{item.authorId},#{item.bookId},#{item.authorName},#{item.authorProfile},#{item.createTime})
+     </foreach>  
+  </insert>
+  
+  <insert id="insert" parameterType="com.frame.model.bauthor.BAuthor" >
+    insert into b_author (author_id, book_id, author_name, 
+      author_profile, create_time)
+    values (#{authorId,jdbcType=INTEGER}, #{bookId,jdbcType=INTEGER}, #{authorName,jdbcType=VARCHAR}, 
+      #{authorProfile,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.frame.model.bauthor.BAuthor" >
+    insert into b_author
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="authorId != null" >
+        author_id,
+      </if>
+      <if test="bookId != null" >
+        book_id,
+      </if>
+      <if test="authorName != null" >
+        author_name,
+      </if>
+      <if test="authorProfile != null" >
+        author_profile,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="authorId != null" >
+        #{authorId,jdbcType=INTEGER},
+      </if>
+      <if test="bookId != null" >
+        #{bookId,jdbcType=INTEGER},
+      </if>
+      <if test="authorName != null" >
+        #{authorName,jdbcType=VARCHAR},
+      </if>
+      <if test="authorProfile != null" >
+        #{authorProfile,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.frame.model.bauthor.BAuthor" >
+    update b_author
+    <set >
+      <if test="bookId != null" >
+        book_id = #{bookId,jdbcType=INTEGER},
+      </if>
+      <if test="authorName != null" >
+        author_name = #{authorName,jdbcType=VARCHAR},
+      </if>
+      <if test="authorProfile != null" >
+        author_profile = #{authorProfile,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where author_id = #{authorId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.frame.model.bauthor.BAuthor" >
+    update b_author
+    set book_id = #{bookId,jdbcType=INTEGER},
+      author_name = #{authorName,jdbcType=VARCHAR},
+      author_profile = #{authorProfile,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where author_id = #{authorId,jdbcType=INTEGER}
+  </update>
+</mapper>

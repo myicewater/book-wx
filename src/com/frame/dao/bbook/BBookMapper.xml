@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.frame.dao.bbook.BBookMapper" >
+  <resultMap id="BaseResultMap" type="com.frame.model.bbook.BBook" >
+    <id column="book_id" property="bookId" jdbcType="INTEGER" />
+    <result column="subtitle" property="subtitle" jdbcType="VARCHAR" />
+    <result column="isbn" property="isbn" jdbcType="VARCHAR" />
+    <result column="author" property="author" jdbcType="VARCHAR" />
+    <result column="origin_title" property="originTitle" jdbcType="VARCHAR" />
+    <result column="binding" property="binding" jdbcType="VARCHAR" />
+    <result column="pages" property="pages" jdbcType="INTEGER" />
+    <result column="images_small" property="imagesSmall" jdbcType="VARCHAR" />
+    <result column="images_large" property="imagesLarge" jdbcType="VARCHAR" />
+    <result column="images_medium" property="imagesMedium" jdbcType="VARCHAR" />
+    <result column="publisher" property="publisher" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="author_intro" property="authorIntro" jdbcType="VARCHAR" />
+    <result column="summary" property="summary" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="beizhu" property="beizhu" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="DATE" />
+    <result column="is_pass" property="isPass" jdbcType="CHAR" />
+    <collection property="bauthors" ofType="com.frame.model.bauthor.BAuthor">
+    	<id column="author_id" property="authorId" jdbcType="INTEGER" />
+	    <result column="book_id" property="bookId" jdbcType="INTEGER" />
+	    <result column="author_name" property="authorName" jdbcType="VARCHAR" />
+	    <result column="author_profile" property="authorProfile" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    </collection>
+    
+  </resultMap>
+  <sql id="Base_Column_List" >
+    book_id, subtitle, isbn, author, origin_title, binding, pages, images_small, images_large, 
+    images_medium, publisher, title, author_intro, summary, price, beizhu, create_time, 
+    is_pass
+  </sql>
+  
+  <update id="deleteBook" parameterType="java.lang.String">
+  update b_publisher set is_used = 0 where publish_id = #{publishId}
+  </update>
+  
+    <select id="checkIfExist" parameterType="string" resultType="java.lang.Integer">
+  	select t.book_id from b_book t where t.isbn=#{isbn}
+  </select>
+  
+  <select id="getBooks" parameterType="java.util.HashMap" resultMap="BaseResultMap" >
+  	  select 
+    <include refid="Base_Column_List" />
+    from b_book order by create_time desc limit #{listNum} 
+  </select>
+  
+  <select id="getBookByIsbn" parameterType="string" resultMap="BaseResultMap">
+     select 
+    t.*,a.*
+    from b_book t left join b_author a
+    on t.book_id=a.book_id where isbn = #{isbn}
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_book
+    where book_id = #{bookId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_book
+    where book_id = #{bookId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.frame.model.bbook.BBook" >
+    insert into b_book (book_id, subtitle, isbn, 
+      author, origin_title, binding, 
+      pages, images_small, images_large, 
+      images_medium, publisher, title, 
+      author_intro, summary, price, 
+      beizhu, create_time, is_pass
+      )
+    values (#{bookId,jdbcType=INTEGER}, #{subtitle,jdbcType=VARCHAR}, #{isbn,jdbcType=VARCHAR}, 
+      #{author,jdbcType=VARCHAR}, #{originTitle,jdbcType=VARCHAR}, #{binding,jdbcType=VARCHAR}, 
+      #{pages,jdbcType=INTEGER}, #{imagesSmall,jdbcType=VARCHAR}, #{imagesLarge,jdbcType=VARCHAR}, 
+      #{imagesMedium,jdbcType=VARCHAR}, #{publisher,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{authorIntro,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, 
+      #{beizhu,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, #{isPass,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.frame.model.bbook.BBook" >
+    insert into b_book
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bookId != null" >
+        book_id,
+      </if>
+      <if test="subtitle != null" >
+        subtitle,
+      </if>
+      <if test="isbn != null" >
+        isbn,
+      </if>
+      <if test="author != null" >
+        author,
+      </if>
+      <if test="originTitle != null" >
+        origin_title,
+      </if>
+      <if test="binding != null" >
+        binding,
+      </if>
+      <if test="pages != null" >
+        pages,
+      </if>
+      <if test="imagesSmall != null" >
+        images_small,
+      </if>
+      <if test="imagesLarge != null" >
+        images_large,
+      </if>
+      <if test="imagesMedium != null" >
+        images_medium,
+      </if>
+      <if test="publisher != null" >
+        publisher,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="authorIntro != null" >
+        author_intro,
+      </if>
+      <if test="summary != null" >
+        summary,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="beizhu != null" >
+        beizhu,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="isPass != null" >
+        is_pass,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bookId != null" >
+        #{bookId,jdbcType=INTEGER},
+      </if>
+      <if test="subtitle != null" >
+        #{subtitle,jdbcType=VARCHAR},
+      </if>
+      <if test="isbn != null" >
+        #{isbn,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null" >
+        #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="originTitle != null" >
+        #{originTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="binding != null" >
+        #{binding,jdbcType=VARCHAR},
+      </if>
+      <if test="pages != null" >
+        #{pages,jdbcType=INTEGER},
+      </if>
+      <if test="imagesSmall != null" >
+        #{imagesSmall,jdbcType=VARCHAR},
+      </if>
+      <if test="imagesLarge != null" >
+        #{imagesLarge,jdbcType=VARCHAR},
+      </if>
+      <if test="imagesMedium != null" >
+        #{imagesMedium,jdbcType=VARCHAR},
+      </if>
+      <if test="publisher != null" >
+        #{publisher,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="authorIntro != null" >
+        #{authorIntro,jdbcType=VARCHAR},
+      </if>
+      <if test="summary != null" >
+        #{summary,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="beizhu != null" >
+        #{beizhu,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=DATE},
+      </if>
+      <if test="isPass != null" >
+        #{isPass,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.frame.model.bbook.BBook" >
+    update b_book
+    <set >
+      <if test="subtitle != null" >
+        subtitle = #{subtitle,jdbcType=VARCHAR},
+      </if>
+      <if test="isbn != null" >
+        isbn = #{isbn,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null" >
+        author = #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="originTitle != null" >
+        origin_title = #{originTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="binding != null" >
+        binding = #{binding,jdbcType=VARCHAR},
+      </if>
+      <if test="pages != null" >
+        pages = #{pages,jdbcType=INTEGER},
+      </if>
+      <if test="imagesSmall != null" >
+        images_small = #{imagesSmall,jdbcType=VARCHAR},
+      </if>
+      <if test="imagesLarge != null" >
+        images_large = #{imagesLarge,jdbcType=VARCHAR},
+      </if>
+      <if test="imagesMedium != null" >
+        images_medium = #{imagesMedium,jdbcType=VARCHAR},
+      </if>
+      <if test="publisher != null" >
+        publisher = #{publisher,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="authorIntro != null" >
+        author_intro = #{authorIntro,jdbcType=VARCHAR},
+      </if>
+      <if test="summary != null" >
+        summary = #{summary,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="beizhu != null" >
+        beizhu = #{beizhu,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=DATE},
+      </if>
+      <if test="isPass != null" >
+        is_pass = #{isPass,jdbcType=CHAR},
+      </if>
+    </set>
+    where book_id = #{bookId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.frame.model.bbook.BBook" >
+    update b_book
+    set subtitle = #{subtitle,jdbcType=VARCHAR},
+      isbn = #{isbn,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR},
+      origin_title = #{originTitle,jdbcType=VARCHAR},
+      binding = #{binding,jdbcType=VARCHAR},
+      pages = #{pages,jdbcType=INTEGER},
+      images_small = #{imagesSmall,jdbcType=VARCHAR},
+      images_large = #{imagesLarge,jdbcType=VARCHAR},
+      images_medium = #{imagesMedium,jdbcType=VARCHAR},
+      publisher = #{publisher,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      author_intro = #{authorIntro,jdbcType=VARCHAR},
+      summary = #{summary,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      beizhu = #{beizhu,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=DATE},
+      is_pass = #{isPass,jdbcType=CHAR}
+    where book_id = #{bookId,jdbcType=INTEGER}
+  </update>
+</mapper>

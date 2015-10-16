@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <meta content="-1" http-equiv="Expires">
+    <meta content="no-cache" http-equiv="Cache-Control">
+    <meta content="no-cache" http-equiv="Pragma">
+    <title>首页</title>
+    <script type="text/javascript" src="${ctx}/js/jquery-2.1.1.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="${ctx}/css/style.css">
+    <script type="text/javascript">
+        $(function(){
+            fontSize();
+            $(window).on('resize',function(){
+                fontSize();
+            });
+            function fontSize(){
+                var winW = $(window).width();
+                var fontsize = winW/20;
+                if(winW>=320){
+                    $('html').css('font-size',fontsize);
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="lbg">
+        <div class="logo"><img src="${ctx}/images/book_logo.png"></div>
+        <div class="login">
+            <div class="telphone  telp mt03">
+                <span><img src="${ctx}/images/tel.png"></span>
+                <input type="tel" id="telphoneNum" placeholder="电话"/>
+            </div>
+            <div class="password  pword mt03">
+                <span><img src="${ctx}/images/suo.png"></span>
+                <input type="password" id="passwd" placeholder="密码"/>
+            </div>
+            <div style="clear:both;">
+        </div>
+        <div class="bbtn" onclick="login()">登录</div>
+        <div class="usersel"><a>忘记密码</a><a>|</a><a href="${ctx}/bmember/toRegister.htm">注册用户</a></div>
+    </div>
+</body>
+<script>
+
+function login(){
+	var telphoneNum = $('#telphoneNum').val();
+	var passwd = $("#passwd").val();
+	
+	var patrnPhone = /^1\d{10}$/;//手机号判断
+	var patrnPass=/^(?!\D+$)(?![^a-z]+$)[a-zA-Z\d]{8,}$/;
+	if(!patrnPhone.exec(telphoneNum)){
+		alert("手机格式不正确")
+		return;
+	}
+	
+	if(passwd.length < 8){//长度至少8位
+		alert("密码长度至少8位，数字字母混合组成")
+		return;
+	}
+	
+	if(!patrnPass.exec(passwd)){
+		alert("密码长度至少8位，数字字母混合组成")
+		return;
+	}
+	
+	var url = "${ctx}/bmember/login.htm";
+	$.ajax({
+		type:"POST",
+		url:url,
+		data:{
+			"openId":localStorage.openId,
+			"telphoneNum":telphoneNum,
+			"passwd":passwd
+		},
+		dataType:"json",
+		success:function(data){
+			if(data.resultCode == "00"){
+				//alert("登录成功");
+				//window.location.href="${ctx}/bmember/toMemberCenter.htm"
+				window.location.href="${ctx}/bbook/toBookIndex.htm"
+			}else{
+				alert("手机号或密码不正确")
+			}
+		}
+	});
+	
+}
+
+$(document).ready(function(){
+    var h = $("body").height();
+    $(".lbg").css({"min-height":h});
+});
+</script>
+</html>

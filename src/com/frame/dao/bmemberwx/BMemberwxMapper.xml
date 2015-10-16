@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.frame.dao.bmemberwx.BMemberwxMapper" >
+  <resultMap id="BaseResultMap" type="com.frame.model.bmemberwx.BMemberwx" >
+    <id column="weixin_id" property="weixinId" jdbcType="INTEGER" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="open_id" property="openId" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="isbound" property="isbound" jdbcType="CHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="iscanced" property="iscanced" jdbcType="CHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="imgurl" property="imgurl" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    weixin_id, member_id, open_id, mobile, isbound, create_time, update_time, iscanced, 
+    code, imgurl
+  </sql>
+  
+  <update id="cancelBind">
+     update b_memberwx set member_id = null where open_id=#{openId}
+  </update>
+    <select id="getMemberWxByOpenId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  select 
+    <include refid="Base_Column_List" />
+    from b_memberwx
+    where open_id = #{openId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_memberwx
+    where weixin_id = #{weixinId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_memberwx
+    where weixin_id = #{weixinId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.frame.model.bmemberwx.BMemberwx" >
+    insert into b_memberwx (weixin_id, member_id, open_id, 
+      mobile, isbound, create_time, 
+      update_time, iscanced, code, 
+      imgurl)
+    values (#{weixinId,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{openId,jdbcType=VARCHAR}, 
+      #{mobile,jdbcType=VARCHAR}, #{isbound,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{iscanced,jdbcType=CHAR}, #{code,jdbcType=VARCHAR}, 
+      #{imgurl,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.frame.model.bmemberwx.BMemberwx" >
+    insert into b_memberwx
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="weixinId != null" >
+        weixin_id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="openId != null" >
+        open_id,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="isbound != null" >
+        isbound,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="iscanced != null" >
+        iscanced,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="imgurl != null" >
+        imgurl,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="weixinId != null" >
+        #{weixinId,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="openId != null" >
+        #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="isbound != null" >
+        #{isbound,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iscanced != null" >
+        #{iscanced,jdbcType=CHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="imgurl != null" >
+        #{imgurl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.frame.model.bmemberwx.BMemberwx" >
+    update b_memberwx
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="openId != null" >
+        open_id = #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="isbound != null" >
+        isbound = #{isbound,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iscanced != null" >
+        iscanced = #{iscanced,jdbcType=CHAR},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="imgurl != null" >
+        imgurl = #{imgurl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where weixin_id = #{weixinId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.frame.model.bmemberwx.BMemberwx" >
+    update b_memberwx
+    set member_id = #{memberId,jdbcType=INTEGER},
+      open_id = #{openId,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      isbound = #{isbound,jdbcType=CHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      iscanced = #{iscanced,jdbcType=CHAR},
+      code = #{code,jdbcType=VARCHAR},
+      imgurl = #{imgurl,jdbcType=VARCHAR}
+    where weixin_id = #{weixinId,jdbcType=INTEGER}
+  </update>
+</mapper>

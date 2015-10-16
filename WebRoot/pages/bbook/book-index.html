@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <meta content="-1" http-equiv="Expires">
+    <meta content="no-cache" http-equiv="Cache-Control">
+    <meta content="no-cache" http-equiv="Pragma">
+    <#include "/common/hideWxMenue.html"/>
+    <title>首页</title>
+    <script type="text/javascript" src="${ctx}/js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=B3e33c811487fa46c2f72e012e3d7764"></script>
+    <script src="${ctx}/js/iscroll.js"></script>
+    <link type="text/css" rel="stylesheet" href="${ctx}/css/style.css">
+    <script type="text/javascript">
+        $(function(){
+            fontSize();
+            $(window).on('resize',function(){
+                fontSize();
+            });
+            function fontSize(){
+                var winW = $(window).width();
+                var fontsize = winW/20;
+                if(winW>=320){
+                    $('html').css('font-size',fontsize);
+                }
+            }
+        });
+        
+        var noMore = false;
+        var loadCount = "${publishers?size}";
+        if(loadCount < 8){
+        	noMore =  true;
+        }
+        
+    </script>
+    
+</head>
+<body>
+    <div class="bg">
+        <div class="top_search">
+            <!-- <div class="sel_city">
+                 <a>北京</a>
+                <a><img src="${ctx}/images/arrow.png"></a>
+            </div> -->
+            <div class="search_box">
+                <img class="search" src="${ctx}/images/search.png"/>
+                <input class="type" id="keyWord" placeholder="请输入书名" /></input>
+            </div>
+            <p class="select" onclick="searchBook();">查询</p>
+        </div>
+        <div class="address">
+                        <a></a><a id="insentAddress"></a>
+        </div>
+        <div id="wrapp">
+            <div id="iscroller">
+                <div class="banner">
+                    
+                </div>
+                <div class="tbooks" id="tbooks">
+                
+                
+                <#list publishers as publish>
+               
+                	<#if publish_index%2 == 0>
+                    <div>
+                        <div class="bleft">
+                            <div onclick="" class="book_pic">
+                                <img onclick="toBookDetail(${publish.publishId})" src="${publish.book.imagesLarge}"/>
+                                <!-- <div class="book_p">6218<a>人阅</a></div> -->
+                            </div>
+                            <div class="book_user">
+                                <span>
+                                <#if (publish.member.userPicUrl)??>
+                                <img src="${ctx}/${uploadRelatedPath}${publish.member.userPicUrl}" />
+                                <#else>
+                                <img src="${ctx}/images/queen.png" />
+                                </#if>
+                                </span>
+                                <a class="text">
+                                <#if (publish.member.nickName)??  && publish.member.nickName != ''>
+                                ${publish.member.nickName}
+                                <#else>
+                               	 书友
+                                </#if>
+                                </a>
+                                <div><a></a><a></a><a></a><a></a>
+                                </div>
+                            </div>
+                            <div class="address_b">
+                                <a></a>
+                                <a>3.8米&nbsp;${publish.member.bLocation.locationName}</a>
+                            </div>
+                        </div>
+                        </#if>
+                        <#if publish_index%2 == 1>
+                        <div class="bright">
+                            <div class="book_pic">
+                                <img src="${publish.book.imagesLarge}"/>
+                                <!-- <div class="book_p">6218<a>人阅</a></div> -->
+                            </div>
+                            <div class="book_user">
+                                <span>
+                                <#if (publish.member.userPicUrl)??>
+                                <img src="${ctx}/${uploadRelatedPath}${publish.member.userPicUrl}" />
+                                <#else>
+                                <img src="${ctx}/images/queen.png" />
+                                </#if>
+                                </span>
+                                <a class="text">
+                                <#if (publish.member.nickName)?? && publish.member.nickName != ''>
+                                ${publish.member.nickName}
+                                <#else>
+                               	 书友
+                                </#if>
+                                </a>
+                                <div><a></a><a></a><a></a><a></a>
+                                </div>
+                            </div>
+                            <div class="address_b">
+                                <a></a>
+                                <a>3.8米&nbsp;${publish.member.bLocation.locationName}</a>
+                            </div>
+                        </div>
+                    </div>
+                    </#if>
+                    
+                    
+					</#list>
+                    
+                    
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div id="pullUp">
+              <span class="pullUpIcon"></span><span class="pullUpLabel"></span>
+            </div> 
+        </div>            
+        
+    </div>
+    <div class="bottom_btn">
+        <ul>
+            <li><a class="pageone"><img src="${ctx}/images/home.png" /></a><a class="sel_btn">首页</a></li>
+            <li onclick= "javascript:window.location.href='${ctx}/bbook/tounDealBookOrders.htm'"><a  class="bookone"><img src="${ctx}/images/menu_icon.png" /></a><a class="sel_btn">书单</a></li>
+            <li onclick="javascript:window.location.href='${ctx}/bbook/toMyInBookOrder.htm'"><a class="bookfind"><img src="${ctx}/images/discover_icon.png" /></a><a class="sel_btn">发现</a></li>
+            <li onclick="javascript:window.location.href='${ctx}/bmember/toMemberCenter.htm'"><a class="bookmy"><img src="${ctx}/images/me_icon.png" /></a><a class="sel_btn">我的</a></li>
+        </ul>
+    </div>
+</body>
+<script>
+
+function searchBook(){
+	
+	var url = "${ctx}/bbook/searchBook.htm";
+	 $.ajax({
+	  type: "post",
+	        dataType: "json",
+	        url: url,
+	        data: {
+	          "keyWord":$("#keyWord").val()
+	        },
+	        success: function(data){
+	        	var html = '';
+	        	 var size = data.publishers.length;
+	        	$(data.publishers).each(function(i){
+	        		if(i % 2 == 0){
+	        			html += '<div>'
+	        				html += '<div class="bleft">'
+	        		}else{
+	        			html += '<div class="bright">'
+	        		}
+	        		 
+	        			 
+	        			 html += ' <div onclick="" class="book_pic">'
+	        			 html += '  <img onclick="toBookDetail('+this.publishId+')" src="'+this.book.imagesLarge+'"/>'
+	        			 //html += '  <!-- <div class="book_p">6218<a>人阅</a></div> -->'
+	        			 html += ' </div>'
+	        			 html += ' <div class="book_user">'
+	        			 html += '  <span>'
+	        			 if(this.member.userPicUrl != null && this.member.userPicUrl != ''){
+	        				 html += '  <img src="${ctx}/${uploadRelatedPath}'+this.member.userPicUrl+'" />'
+	        			 }else{
+	        				 html += '  <img src="${ctx}/images/queen.png" />'
+	        			 }
+	        			 
+	        			
+	        			 html += '  </span>'
+	        			 html += '  <a class="text">'
+	        			 if(this.member.nickName != null && this.member.nickName != ""){
+	        				 html += this.member.nickName
+	        			 }else{
+	        				 html += ' 	 书友'
+	        			 }
+	        			 html += '  </a>'
+	        			 html += '  <div><a></a><a></a><a></a><a></a>'
+	        			 html += '  </div>'
+	        			 html += ' </div>'
+	        			 html += ' <div class="address_b">'
+	        			 html += '  <a></a>'
+	        			 html += '  <a>3.8米&nbsp;'+this.member.bLocation.locationName+'</a>'
+	        			 html += ' </div>'
+	        			 html += '</div>'
+	        			 
+	        			 if(i%2 == 1 || i+1 ==size){
+	        				 html += '</div>'
+	        			 }
+	            })
+	            $("#tbooks").html(html)
+	        }
+	 });
+}
+
+function toBookDetail(publishId){
+	window.location.href="${ctx}/bbook/getBookDetail.htm?publishId="+publishId;
+}
+
+$(document).ready(function(){
+    var h = $("body").height();
+    $(".bg").css({"min-height":h});
+
+    $(".bottom_btn li").eq(0).find(".sel_btn").css("color","#ff6d33");
+
+    $(".bottom_btn li").click(function(){
+        $(".bottom_btn li").each(function(i){
+        switch(i){
+            case 0:
+               $(".pageone").find("img").attr("src","${ctx}/images/home_icon.png");
+               $(this).find(".sel_btn").css("color","#999999");
+            case 1:
+               $(".bookone").find("img").attr("src","${ctx}/images/menu_icon.png");
+               $(this).find(".sel_btn").css("color","#999999");
+            case 2:
+               $(".bookfind").find("img").attr("src","${ctx}/images/discover_icon.png"); 
+               $(this).find(".sel_btn").css("color","#999999");  
+            case 3:
+               $(".bookmy").find("img").attr("src","${ctx}/images/me_icon.png");
+               $(this).find(".sel_btn").css("color","#999999");
+            }
+        });
+        var src = $(this).find("img").attr("src").split("_")[0]+".png";
+            $(this).find("img").attr("src",src);
+            $(this).find(".sel_btn").css("color","#ff6d33");  
+    });
+
+});
+
+var myScroll,
+    pullUpEl, pullUpOffset;
+function pullUpAction () {
+    setTimeout(function () {
+        var div, dl, i;
+        dl = document.getElementById('tbooks');
+
+        
+        return;
+        
+        
+        /* for (i=0; i<3; i++) {
+            div = document.createElement('div');
+            div.innerHTML ="<div>\
+                        <div class='bleft'>\
+                            <div class='book_pic'>\
+                                <img src='${ctx}/images/grimm.png'/>\
+                                <div class='book_p'>6218<a>人阅</a></div>\
+                            </div>\
+                            <div class='book_user'>\
+                                <span><img src='${ctx}/images/queen.png' /></span>\
+                                <a class='text'>唯有暗香</a>\
+                                <div><a></a><a></a><a></a><a></a>\
+                                </div>\
+                            </div>\
+                            <div class='address_b'>\
+                                <a></a>\
+                                <a>3.8米&nbsp;朝阳区安立路</a>\
+                            </div>\
+                        </div>\
+                        <div class='bright'>\
+                            <div class='book_pic'>\
+                                <img src='${ctx}/images/limidream.png'/>\
+                                <div class='book_p'>6218<a>人阅</a></div>\
+                            </div>\
+                            <div class='book_user'>\
+                                <span><img src='${ctx}/images/queen.png' /></span>\
+                                <a class='text'>唯有暗香</a>\
+                                <div><a></a><a></a><a></a><a></a>\
+                                </div>\
+                            </div>\
+                            <div class='address_b'>\
+                                <a></a>\
+                                <a>3.8米&nbsp;朝阳区安立路</a>\
+                            </div>\
+                        </div>\
+                    </div>";
+                                              
+            dl.insertBefore(div, dl.lastchild);
+            
+        } */
+        
+        
+        
+        
+        
+        myScroll.refresh();
+    }, 200);
+}
+
+function loaded() {
+    pullUpEl = document.getElementById('pullUp'); 
+    pullUpOffset = pullUpEl.offsetHeight;
+    
+    myScroll = new iScroll('wrapp', {
+        useTransition: true,
+        
+        onRefresh: function () {
+             if (pullUpEl.className.match('loading')) {
+                pullUpEl.className = '';
+                
+            }
+        },
+        onScrollMove: function () {
+            if (this.y < (this.maxScrollY - 5) && !pullUpEl.className.match('flip')) {
+                pullUpEl.className = 'flip';
+                
+                this.maxScrollY = this.maxScrollY;
+            } else if (this.y > (this.maxScrollY + 5) && pullUpEl.className.match('flip')) {
+                pullUpEl.className = '';
+                
+                this.maxScrollY = pullUpOffset;
+            }
+        },
+        onScrollEnd: function () {
+             if (pullUpEl.className.match('flip')) {
+                pullUpEl.className = 'loading';
+                                
+                pullUpAction(); // Execute custom function (ajax call?)
+            }
+        }
+    });
+    
+    setTimeout(function () { document.getElementById('wrapp').style.left = '0'; }, 800);
+}
+
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+
+document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 200); }, false);
+
+
+wx.ready(function () {
+	//alert(localStorage.instantAddress)
+	if(typeof(localStorage.instantAddress) == "undefined"){
+		//alert("go here")
+		
+		wx.getLocation({
+		    type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+		    success: function (res) {
+		        var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+		        var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+		        var speed = res.speed; // 速度，以米/每秒计
+		        var accuracy = res.accuracy; // 位置精度
+		        //alert("latitude:"+latitude+"longitude:"+longitude)
+		        
+		        var geoc = new BMap.Geocoder();
+		        var point = new BMap.Point(longitude,latitude);
+		        
+		        geoc.getLocation(point, function(rs){
+		        	var addComp = rs.addressComponents;
+		        	var address = addComp.province  + addComp.city  + addComp.district  + addComp.street  + addComp.streetNumber;
+					//alert(addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
+					localStorage.instantAddress = address;
+					$("#insentAddress").text(address)
+					
+					
+		        })
+		    }
+		});
+	}else{
+		//alert("go there")
+		$("#insentAddress").text(localStorage.instantAddress)
+	}
+	
+})
+
+
+
+</script>
+</html>

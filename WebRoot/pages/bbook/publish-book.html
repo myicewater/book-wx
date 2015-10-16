@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <meta content="-1" http-equiv="Expires">
+    <meta content="no-cache" http-equiv="Cache-Control">
+    <meta content="no-cache" http-equiv="Pragma">
+    <#include "/common/hideWxMenue.html"/>
+    <title>扫描</title>
+    <script type="text/javascript" src="${ctx}/js/jquery-2.1.1.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="${ctx}/css/style.css">
+    <script type="text/javascript">
+        $(function(){
+            fontSize();
+            $(window).on('resize',function(){
+                fontSize();
+            });
+            function fontSize(){
+                var winW = $(window).width();
+                var fontsize = winW/20;
+                if(winW>=320){
+                    $('html').css('font-size',fontsize);
+                }
+            }
+        });
+        
+        function scanQrCode(){
+        	wx.scanQRCode({
+        	    needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+        	    scanType: ["qrCode"], // 可以指定扫二维码还是一维码，默认二者都有
+        	    success: function (res) {
+        	    	var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+        	    	alert(result)
+        		}
+        	});
+        }
+        
+        function scanBarCode(){
+        	wx.scanQRCode({
+        	    needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+        	    scanType: ["barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+        	    success: function (res) {
+        	    	var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+        	    	var strs= new Array(); //定义一数组 
+        	    	strs=result.split(","); //字符分割 
+        	    	alert(strs[1])
+        	    	var url = "${ctx}/bbook/fetchBookInfo.htm";
+        	    	 $.ajax({
+        	    	  type: "post",
+        	    	        dataType: "json",
+        	    	        url: url,
+        	    	        data: {
+        	    	         "isbn":strs[1]
+        	    	        },
+        	    	        success: function(data){
+        	    	           if(data.resultCode == '00'){
+        	    	        	   $("#bookName").val(data.book.title);
+        	    	        	   $("#isbn").val(data.book.isbn);
+        	    	        	   var authors = '';
+        	    	        	   $(data.book.bauthors).each(function(){
+        	    	        		   authors += this.authorName+" " 
+        	    	        	   });
+        	    	        	   $("#author").val(authors)
+        	    	        	   $("#publisher").val(data.book.publisher);
+        	    	        	   $("#price").val(data.book.price);
+        	    	        	   
+        	    	           }
+        	    	        }
+        	    	 });
+        		}
+        	});
+        }
+    </script>
+</head>
+<body>
+    <div class="bg">
+        <div class="code">
+            <span><img onclick="scanQrCode()" src="${ctx}/images/saoyisao.png"></span>
+            <span><img onclick="scanBarCode()" src="${ctx}/images/tiaoma.png"></span>
+        </div>
+        <div class="book_info">
+            <ul>
+                <li>
+                    <span>书名</span><input  id="bookName" type="text" placeholder="">
+                </li>
+                <li>
+                    <span>书号</span><input id="isbn" type="text" placeholder="">
+                </li>
+                <li>
+                    <span>作者</span><input id="author" type="text" placeholder="">
+                </li>    
+                <li>
+                    <span>出版社</span><input id="publisher" type="text" placeholder="">
+                </li>
+                <li>
+                    <span>定价</span><input id="price" type="text" placeholder="">
+                </li>
+                <li>
+                    <span>借阅价</span><input id="lendFee" type="tel" placeholder="请输入">
+                </li>
+                 <li>
+                    <span>天数</span>
+                    <select id="lendDays">
+                    <option value="1">1天</option>
+                    <option value="2">2天</option>
+                    <option value="3">3天</option>
+                        <option value="4">4天</option>
+                        <option value="5">5天</option>
+                        <option value="6">6天</option>
+                        <option value="7">7天</option>
+                        <option value="8">8天</option>
+                        <option value="9">9天</option>
+                        <option value="10">10天</option>
+                        <option value="15">15天</option>
+                        <option value="20">20天</option>
+                        <option value="30">30天</option>
+                        
+                    </select>
+                </li>
+            </ul>
+        </div>    
+    </div>
+     <div class="bbtn02" onclick="publishBook()" style="margin-top:0.75rem;margin-bottom:0.75rem;">保存</div>
+   
+</body>
+<script>
+
+function publishBook(){
+	var r = /^\d+(\.\d+)?$/;
+	alert($("#lendFee").val())
+	var result = r.test($("#lendFee").val())
+	alert(result)
+	if(!result){
+		alert("请输入正确借书价格")
+		return
+	}
+	var url = "${ctx}/bbook/publishBook.htm";
+	 $.ajax({
+	  type: "post",
+	        dataType: "json",
+	        url: url,
+	        data: {
+	         "isbn":$("#isbn").val(),
+	         "lendDays":$("#lendDays").val(),
+	         "lendFee":$("#lendFee").val()
+	        },
+	        success: function(data){
+	           if(data.resultCode == '00'){
+	        	  alert("发布成功")
+	        	  window.location.href='${ctx}/bbook/getMyBooks.htm' 
+	           }
+	        }
+	 });
+}
+$(document).ready(function(){
+    var h = $("body").height();
+    $(".bg").css({"min-height":h});
+    
+});
+</script>
+</html>

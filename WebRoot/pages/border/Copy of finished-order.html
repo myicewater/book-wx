@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <meta content="-1" http-equiv="Expires">
+    <meta content="no-cache" http-equiv="Cache-Control">
+    <meta content="no-cache" http-equiv="Pragma">
+    <title>借入书单</title>
+    <script type="text/javascript" src="${ctx}/js/jquery-2.1.1.min.js"></script>
+    <script src="${ctx}/js/iscroll.js"></script>
+    <link type="text/css" rel="stylesheet" href="${ctx}/css/style.css">
+    <script type="text/javascript">
+        $(function(){
+            fontSize();
+            $(window).on('resize',function(){
+                fontSize();
+            });
+            function fontSize(){
+                var winW = $(window).width();
+                var fontsize = winW/20;
+                if(winW>=320){
+                    $('html').css('font-size',fontsize);
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="bg" style="position:absolute;">
+        <div class="sel_type">
+            <ul>
+                <li><span onclick="window.location.href='${ctx}/bbook/tounDealBookOrders.htm'" class="sel_bor">待处理</span></li>
+                <li><span onclick="window.location.href='${ctx}/bbook/toConfirmBookOrders.htm'">待确认</span></li>
+                <li><span onclick="window.location.href='${ctx}/bbook/toUnCommentBookOrders.htm'">待评价</span></li>
+                <li><span onclick="window.location.href='${ctx}/bbook/toFinishedBookOrders.htm'">已结束</span></li>
+            </ul>
+        </div>
+        <div id="wrapp" style="top: 3.65rem;bottom: 3.75rem;">
+            <div id="iscroller">
+                <div class="bk_list">
+                    <ul>
+                    <#list bOrders as order>
+                        <li class="bkl">
+                            <div class="bk_info">
+                                <p>${order.createTime?string('yyyy-MM-dd HH:mm:ss')}</p>
+                                <span class="book_img">
+                                    <img src="${order.bPublisher.book.imagesLarge}">
+                                </span>
+                                <div class="bk_text">
+                                    <ul>
+                                        <li>${order.bPublisher.book.title}</li>
+                                        <li>图书主人：￥5.00元</li>
+                                        <li>借书天数：<a>${order.borrowDays}</a></li>
+                                    </ul>
+                                </div>
+                                <!-- <#if order.status == 0>
+                                <p>申请中..</p>
+                                <#elseif order.status == 1>
+                                	<p>图书传递中..</p>
+                                	<span onclick="updateOrderStatus(${order.orderId},'2')" class="btn">借到书了</span>  
+                                <#elseif order.status == 2>
+                                <p>阅读中..</p>
+                                <#elseif order.status == 3>
+                                <p>归还了..</p>
+                                <#elseif order.status == 4>
+                                <p>不同意借书..</p>
+                                </#if> -->
+                                
+                                <span onclick="javascript:window.location.href='${ctx}/bbook/toBookOrderDetail.htm?orderId=${order.orderId}'" class="btn">查看详情</span>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </li>
+                       </#list>
+                          
+                    </ul>
+                </div>
+
+            <div id="pullUp">
+                <span class="pullUpIcon"></span>
+                <span class="pullUpLabel"></span>
+            </div> 
+            </div>
+        </div>        
+    </div>
+    <div class="bottom_btn">
+        <ul>
+            <li onclick="javascript:window.location.href='${ctx}/bbook/toBookIndex.htm'"><a class="pageone"><img src="${ctx}/images/home_icon.png" /></a><a class="sel_btn">首页</a></li>
+            <li onclick="javascript:window.location.href='${ctx}/bbook/tounDealBookOrders.htm'"><a class="bookone"><img src="${ctx}/images/menu.png" /></a><a class="sel_btn">书单</a></li>
+            <li onclick="javascript:window.location.href='${ctx}/bbook/toDiscovery.htm'"><a class="bookfind"><img src="${ctx}/images/discover_icon.png" /></a><a class="sel_btn">发现</a></li>
+            <li onclick="javascript:window.location.href='${ctx}/bmember/toMemberCenter.htm'"><a class="bookmy"><img src="${ctx}/images/me_icon.png" /></a><a class="sel_btn">我的</a></li>
+        </ul>
+    </div>
+</body>
+<script>
+
+function updateOrderStatus(orderId,status){
+	console.log("update")
+	var url = "${ctx}/border/updateOrderStatus.htm";
+	 $.ajax({
+	  type: "post",
+	        dataType: "json",
+	        url: url,
+	        data: {
+	          "orderId":orderId,
+	          "status":status
+	        },
+	        success: function(data){
+	        	 if(data.resultCode == "00"){
+	                    alert("操作成功");
+	                    history.go(0)
+	            }else{
+	                    alert("");
+	            }
+	        }
+	 });
+}
+
+$(document).ready(function(){
+    var h = $("body").height();
+    $(".bg").css({"min-height":h});
+    $(".bottom_btn li").eq(1).find(".sel_btn").css("color","#ff6d33");
+
+    $(".sel_type li").click(function(){
+        $(".sel_type").find(".sel_bor").removeClass("sel_bor");
+        $(this).find("span").addClass("sel_bor");
+    });
+
+    /* $(".bottom_btn li").click(function(){
+        $(".bottom_btn li").each(function(i){
+        switch(i){
+            case 0:
+               $(".pageone").find("img").attr("src","images/home_icon.png");
+               $(this).find(".sel_btn").css("color","#999999");
+            case 1:
+               $(".bookone").find("img").attr("src","images/menu_icon.png");
+               $(this).find(".sel_btn").css("color","#999999");
+            case 2:
+               $(".bookfind").find("img").attr("src","images/discover_icon.png"); 
+               $(this).find(".sel_btn").css("color","#999999");  
+            case 3:
+               $(".bookmy").find("img").attr("src","images/me_icon.png");
+               $(this).find(".sel_btn").css("color","#999999");
+            }
+        });
+        var src = $(this).find("img").attr("src").split("_")[0]+".png";
+            $(this).find("img").attr("src",src);
+            $(this).find(".sel_btn").css("color","#ff6d33");  
+    }); */
+});
+    var myScroll,
+    pullUpEl, pullUpOffset;
+function pullUpAction () {
+    setTimeout(function () {
+        var div, dl, i;
+        dl = $('.bk_list ul')[0];
+		/* 
+        for (i=0; i<3; i++) {
+            div = document.createElement('li');
+            div.setAttribute('class','bkl');
+            div.innerHTML ="<div class='bk_info'>\
+                                <p>2015-08-02 20:32</p>\
+                                <span class='book_img'>\
+                                    <img src='images/limidream.png'>\
+                                </span>\
+                                <div class='bk_text'>\
+                                    <ul>\
+                                        <li>几米漫画集</li>\
+                                        <li>借书款：￥5.00元</li>\
+                                        <li>归还时间：<a>2015-10-12</a></li>\
+                                    </ul>\
+                                </div>\
+                                <span class='btn'>确认</span>\
+                            </div>\
+                            <div style='clear:both;'></div>";
+                                              
+            dl.insertBefore(div, dl.lastchild);
+        } */
+        
+        myScroll.refresh();
+    }, 200);
+}
+
+function loaded() {
+    pullUpEl = document.getElementById('pullUp'); 
+    pullUpOffset = pullUpEl.offsetHeight;
+    
+    myScroll = new iScroll('wrapp', {
+        useTransition: true,
+        
+        onRefresh: function () {
+             if (pullUpEl.className.match('loading')) {
+                pullUpEl.className = '';
+                
+            }
+        },
+        onScrollMove: function () {
+            if (this.y < (this.maxScrollY - 5) && !pullUpEl.className.match('flip')) {
+                pullUpEl.className = 'flip';
+                
+                this.maxScrollY = this.maxScrollY;
+            } else if (this.y > (this.maxScrollY + 5) && pullUpEl.className.match('flip')) {
+                pullUpEl.className = '';
+                
+                this.maxScrollY = pullUpOffset;
+            }
+        },
+        onScrollEnd: function () {
+             if (pullUpEl.className.match('flip')) {
+                pullUpEl.className = 'loading';
+                                
+                pullUpAction(); // Execute custom function (ajax call?)
+            }
+        }
+    });
+    
+    setTimeout(function () { document.getElementById('wrapp').style.left = '0'; }, 800);
+}
+
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+
+document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 200); }, false);
+
+</script>
+</html>

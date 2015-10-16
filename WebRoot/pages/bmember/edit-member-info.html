@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <meta content="-1" http-equiv="Expires">
+    <meta content="no-cache" http-equiv="Cache-Control">
+    <meta content="no-cache" http-equiv="Pragma">
+    <title>我的资料</title>
+    <script type="text/javascript" src="${ctx}/js/jquery-2.1.1.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="${ctx}/css/style.css">
+    <script type="text/javascript">
+        $(function(){
+            fontSize();
+            $(window).on('resize',function(){
+                fontSize();
+            });
+            function fontSize(){
+                var winW = $(window).width();
+                var fontsize = winW/20;
+                if(winW>=320){
+                    $('html').css('font-size',fontsize);
+                }
+            }
+            
+            
+            
+            <#if (bMember.sex)??>
+            	$("#sex").val("${bMember.sex}");
+            	$("#sex").change();
+            </#if>
+            <#if (bMember.age)??>
+        	$("#age").val("${bMember.age}");
+        	$("#age").change();
+        </#if>
+        });
+    </script>
+</head>
+<body>
+
+<script>
+
+var choosePic = new Image();//choose picture object
+var reader = new FileReader();
+
+var urlData = null;//input data
+var newFile;//读取的文件对象
+
+$(document).ready(function(){
+	
+	reader.onload=function(e){
+        //alert("reader");
+		urlData = this.result;
+	        
+	    if(urlData.indexOf("data:base64") == 0){
+	        urlData = "data:image/jpg;base64"  + urlData.substr(11);
+	    }
+	    choosePic.src = urlData;
+	};
+	
+	choosePic.onload=function() {
+		//alert("nature:"+choosePic.naturalWidth +","+choosePic.naturalHeight+"real:"+choosePic.width+","+choosePic.height);
+	
+		
+		$("#target").attr("src",urlData);
+		
+	}
+	//点击选择图片后触发
+	$("#fileInput").change(function() {
+		
+		newFile = this.files[0];
+		console.info("size: "+newFile.size);
+		
+		 if(newFile.size > 1000000){ //大于1M很难承受的
+			alert("图片体积太大了");
+			return;
+		}
+		//alert(newFile);
+		//alert($("#fileInput").val());
+	    var suffix = $("#fileInput").val().toLowerCase().substr($("#fileInput").val().lastIndexOf(".")); 
+		//加入文件判断程序
+		
+		if(!(suffix == ".jpg" || suffix == ".jpeg" || suffix == ".png" || suffix == ".gif" || suffix == ".bmp")){
+			alert("请上传图片格式！");
+			return ;
+		}
+		
+	    reader.readAsDataURL(newFile);
+	
+	});
+});
+
+</script>
+
+    <div class="bg">
+        <div class="user_info">
+            <div class="user_heard">
+                <span class="user_img">
+                    <a>
+                    <#if (bMember.userPicUrl)??>
+                    <img id="target" onclick="javascript:$('#fileInput').click()" src="${ctx}/${uploadRelatedPath}${bMember.userPicUrl}">
+                    <#else>
+                    <img id="target" onclick="javascript:$('#fileInput').click()" src="${ctx}/images/queen.png">
+                    </#if>
+                    </a>
+                    <input type="file" name="upfile" id="fileInput"  style="display:none;"/>
+                    
+                </span>
+                <p class="pedit">修改</p>
+            </div>
+            <ul>
+                <li>
+                    <span>昵称</span><input id="nickName" type="text" value="${bMember.nickName}">
+                </li>
+                <li>
+                    <span>性别</span><!-- <input id="sex" type="text" value="女"> -->
+                    
+                    <select id="sex">
+                        <option value="0">保密</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                    </select>
+                </li>
+                <li>
+                    <span>年龄</span><!-- <input id="age" type="text" value="90后"> -->
+                    <select id="age">
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="6">6</option>
+						<option value="7">7</option>
+						<option value="8">8</option>
+						<option value="9">9</option>
+						<option value="10">10</option>
+						<option value="11">11</option>
+						<option value="12">12</option>
+						<option value="13">13</option>
+						<option value="14">14</option>
+						<option value="15">15</option>
+						<option value="16">16</option>
+						<option value="17">17</option>
+						<option value="18">18</option>
+						<option value="19">19</option>
+						<option value="20">20</option>
+						<option value="21">21</option>
+						<option value="22">22</option>
+						<option value="23">23</option>
+						<option value="24">24</option>
+						<option value="25">25</option>
+						<option value="26">26</option>
+						<option value="27" selected="selected">27</option>
+						<option value="28">28</option>
+						<option value="29">29</option>
+						<option value="30">30</option>
+						<option value="31">31</option>
+						<option value="32">32</option>
+						<option value="33">33</option>
+						<option value="34">34</option>
+						<option value="35">35</option>
+						<option value="36">36</option>
+						<option value="37">37</option>
+						<option value="38">38</option>
+						<option value="39">39</option>
+						<option value="40">40</option>
+						<option value="41">41</option>
+						<option value="42">42</option>
+						<option value="43">43</option>
+						<option value="44">44</option>
+						<option value="45">45</option>
+						<option value="46">46</option>
+						<option value="47">47</option>
+						<option value="48">48</option>
+						<option value="49">49</option>
+						<option value="50">50</option>
+						<option value="51">51</option>
+						<option value="52">52</option>
+						<option value="53">53</option>
+						<option value="54">54</option>
+						<option value="55">55</option>
+						<option value="56">56</option>
+						<option value="57">57</option>
+						<option value="58">58</option>
+						<option value="59">59</option>
+						<option value="60">60</option>
+						<option value="61">61</option>
+						<option value="62">62</option>
+						<option value="63">63</option>
+						<option value="64">64</option>
+						<option value="65">65</option>
+						<option value="66">66</option>
+						<option value="67">67</option>
+						<option value="68">68</option>
+						<option value="69">69</option>
+						<option value="70">70</option>
+						<option value="71">71</option>
+						<option value="72">72</option>
+						<option value="73">73</option>
+						<option value="74">74</option>
+						<option value="75">75</option>
+						<option value="76">76</option>
+						<option value="77">77</option>
+						<option value="78">78</option>
+						<option value="79">79</option>
+						<option value="80">80</option>
+
+                    </select>
+                </li>    
+                <li>
+                    <span>职业</span><input id="position" type="text" value="${bMember.jobOccupation}">
+                </li>
+                <li>
+                    <span>籍贯</span><input id="city" type="text" value="${bMember.hometown}">
+                </li>
+                <li>
+                    <span style="width:4rem;">个人签名</span><input type="text" id="personSign" style="width:14.25rem;" value="${bMember.personSign}">
+                </li>
+            </ul>
+        </div>
+        <div class="bbtn02" onclick="editInfo()"  style="margin-top:1rem;">保存</div>
+    </div>
+</body>
+<script>
+
+function editInfo(){
+	var url = "${ctx}/bmember/completeUserInfo.htm";
+	$.ajax({
+		type:"POST",
+		url:url,
+		dataType:"json",
+		data:{
+			"nickName":$("#nickName").val(),
+			"sex":$("#sex").val(),
+			"city":$("#city").val(),
+			"age":$("#age").val(),
+			"urlData":urlData,
+			"position":$("#position").val(),
+			"personSign":$("#personSign").val()
+			
+		},
+		success:function(data){
+			if(data.resultCode == "00"){
+				alert("完善成功")
+				window.location.href="${ctx}/bmember/toMemberCenter.htm";
+			}else{
+				alert("fail")
+			}
+		}
+	});
+}
+
+$(document).ready(function(){
+    var h = $("body").height();
+    $(".bg").css({"min-height":h});
+});
+</script>
+</html>

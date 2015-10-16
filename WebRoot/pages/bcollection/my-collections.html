@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <meta content="-1" http-equiv="Expires">
+    <meta content="no-cache" http-equiv="Cache-Control">
+    <meta content="no-cache" http-equiv="Pragma">
+    <title>图书列表</title>
+    <script type="text/javascript" src="${ctx}/js/jquery-2.1.1.min.js"></script>
+    <script src="${ctx}/js/iscroll.js"></script>
+    <link type="text/css" rel="stylesheet" href="${ctx}/css/style.css">
+    <script type="text/javascript">
+        $(function(){
+            fontSize();
+            $(window).on('resize',function(){
+                fontSize();
+            });
+            function fontSize(){
+                var winW = $(window).width();
+                var fontsize = winW/20;
+                if(winW>=320){
+                    $('html').css('font-size',fontsize);
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="bg">
+        <div id="wrapp" style="top: 0rem;bottom: 0.75rem;">
+            <div id="iscroller">
+                <div class="btitle books_list">图书列表</div>
+                <div class="book_list">
+                
+                	<#list collections as collection>
+                        <div class="bookls booklsbg">
+                          <span class="bookimg" style="background:url(${collection.bPublisher.book.imagesLarge});background-size: 100% 100%;" onclick="window.location.href='${ctx}/bbook/getBookDetail.htm?publishId=${collection.bPublisher.publishId}'">
+                          <img src="${ctx}/images/no_borrow02.png"></span>
+                           <div class="book_content wt">
+                               <ul>
+                                   <li>${collection.bPublisher.book.title}</li>
+                                   <li>出借：${collection.bPublisher.lendDays}天</li>
+                                   <li class="collect"><a><img src="${ctx}/images/start02.png"></a><a>${collection.bPublisher.collectedCount}人收藏</a></li>
+                               </ul>
+                           </div>
+                           <div class="borrower" onclick="cancelCollect(${collection.collectId})">取消收藏</div>
+                           <div style="clear:both;"></div>
+                        </div>
+                     </#list>   
+                    </div>
+                </div>
+            </div>
+            <div id="pullUp">
+              <span class="pullUpIcon"></span><span class="pullUpLabel"></span>
+            </div> 
+        </div>
+    </div>
+</body>
+<script>
+
+function cancelCollect(publishId){
+	
+	var url = "${ctx}/bcollection/cancelCollection.htm";
+	$.ajax({
+	 type: "post",
+	       dataType: "json",
+	       url: url,
+	       data: {
+	        "collectId":publishId
+	       },
+	       success: function(data){
+	           if(data.resultCode == "00"){
+	                   history.go(0)
+	           }else{
+	                   alert("删除失败，请重试");
+	           }
+	       }
+	});
+}
+
+
+
+$(document).ready(function(){
+    var h = $("body").height();
+    $(".bg").css({"min-height":h});
+});
+    var myScroll,
+    pullUpEl, pullUpOffset;
+function pullUpAction () {
+    setTimeout(function () {
+        var div, dl, i;
+        dl = $('.book_list')[0];
+
+       /*  for (i=0; i<3; i++) {
+            div = document.createElement('div');
+            div.setAttribute('class','bookls booklsbg');
+            div.innerHTML ="<span class='bookimg'><img src='images/fogOrphan.png'></span>\
+                           <div class='book_content wt'>\
+                               <ul>\
+                                   <li>雾都孤儿</li>\
+                                   <li>出借：7天</li>\
+                                   <li class='collect'><a><img src='images/start02.png'></a><a>33人收藏</a></li>\
+                               </ul>\
+                           </div>\
+                           <div class='borrower'>借阅此书</div>\
+                           <div style='clear:both;'></div>";
+                                              
+            dl.insertBefore(div, dl.lastchild);
+        } */
+        
+        myScroll.refresh();
+    }, 200);
+}
+
+function loaded() {
+    pullUpEl = document.getElementById('pullUp'); 
+    pullUpOffset = pullUpEl.offsetHeight;
+    
+    myScroll = new iScroll('wrapp', {
+        useTransition: true,
+        
+        onRefresh: function () {
+             if (pullUpEl.className.match('loading')) {
+                pullUpEl.className = '';
+                
+            }
+        },
+        onScrollMove: function () {
+            if (this.y < (this.maxScrollY - 5) && !pullUpEl.className.match('flip')) {
+                pullUpEl.className = 'flip';
+                
+                this.maxScrollY = this.maxScrollY;
+            } else if (this.y > (this.maxScrollY + 5) && pullUpEl.className.match('flip')) {
+                pullUpEl.className = '';
+                
+                this.maxScrollY = pullUpOffset;
+            }
+        },
+        onScrollEnd: function () {
+             if (pullUpEl.className.match('flip')) {
+                pullUpEl.className = 'loading';
+                                
+                pullUpAction(); // Execute custom function (ajax call?)
+            }
+        }
+    });
+    
+    setTimeout(function () { document.getElementById('wrapp').style.left = '0'; }, 800);
+}
+
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+
+document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 200); }, false);
+
+</script>
+</html>

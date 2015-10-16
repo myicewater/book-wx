@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+	</typeAliases>
+	 <plugins>
+		<plugin interceptor="com.github.pagehelper.PageHelper">
+			<property name="dialect" value="mysql" />
+			<property name="offsetAsPageNum" value="true" />
+			<property name="rowBoundsWithCount" value="true" />
+			<property name="pageSizeZero" value="true" />
+			<property name="reasonable" value="true" />
+		</plugin>
+	</plugins> 
+	<mappers>
+		
+		<mapper resource="com/frame/dao/bmember/BMemberMapper.xml"/>
+		
+		<mapper resource="com/frame/dao/bbook/BBookMapper.xml"/>
+		<mapper resource="com/frame/dao/bcode/BCodeMapper.xml"/>
+		<mapper resource="com/frame/dao/bmemberwx/BMemberwxMapper.xml"/>
+		<mapper resource="com/frame/dao/bauthor/BAuthorMapper.xml"/>
+		<mapper resource="com/frame/dao/bpublisher/BPublisherMapper.xml"/>
+		<mapper resource="com/frame/dao/blocation/BLocationMapper.xml"/>
+	</mappers>
+</configuration>

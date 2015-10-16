@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <meta content="-1" http-equiv="Expires">
+    <meta content="no-cache" http-equiv="Cache-Control">
+    <meta content="no-cache" http-equiv="Pragma">
+    <title>详情页</title>
+    <script type="text/javascript" src="${ctx}/js/jquery-2.1.1.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="${ctx}/css/style.css">
+    <script type="text/javascript">
+        $(function(){
+            fontSize();
+            $(window).on('resize',function(){
+                fontSize();
+            });
+            function fontSize(){
+                var winW = $(window).width();
+                var fontsize = winW/20;
+                if(winW>=320){
+                    $('html').css('font-size',fontsize);
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="bg">
+        <div class="userbg">
+            <div class="ubtn">
+                <ul>
+                    <li><div><img src="${ctx}/images/heart.png"><a>关注</a></div></li>
+                    <!-- <li><div><img src="images/start.png"><a>收藏</a></div></li>
+                    <li><div><img src="images/link.png"><a>分享</a></div></li> -->
+                </ul>
+            </div>
+        </div>
+        <div class="user_infos">
+            <div class="user_heart">
+                <img src="images/queen.png">
+            </div>
+            <div class="user_text">
+                <ul>
+                    <li>${member.nickName}</li>
+                    <li><div class="hearts"><a></a><a></a><a></a><a></a><a></a><div style="clear:both;"></div></div></li>
+                    <li><span>6人关注</span><span>${member.age}岁</span></li>
+                </ul>
+            </div>
+            <div class="methods">
+                <span>送</span>
+                <span>取</span>
+            </div>
+        </div>
+        
+        <div class="usertext">
+            <ul>
+                <li><span><img src="${ctx}/images/topic.png"></span><span>${member.personSign}</span><a class="arrow_r"><img src="images/arrow_right.png"></a></li>
+                <li><span><img src="${ctx}/images/location_T.png"></span><span>${member.bLocation.locationName}</span><a class="arrow_r"><img src="images/arrow_right.png"></a></li>
+            </ul>
+        </div>
+        <div class="p_menu">
+          <ul>
+            <li>
+              <span><img src="${ctx}/images/jiaguanzhu.png"></span>
+              <span>加关注</span>
+            </li>
+            <li>
+              <span><img src="${ctx}/images/tushu.png"></span>
+              <span>TA的图书</span>
+            </li>
+            <li>
+              <span><img src="${ctx}/images/shaojuhua.png"></span>
+              <span>捎句话</span>
+            </li>
+          </ul>
+        </div>
+        <!-- <div class="book_list">
+            <div class="btitle">书单</div>
+            <div class="bookls">
+              <span class="bookimg"><img src="images/fogOrphan.png"></span>
+               <div class="book_content">
+                   <ul>
+                       <li>雾都孤儿</li>
+                       <li>定价：￥28.00元</li>
+                       <li>借阅时间：06:25-08:26</li>
+                       <li><span>借阅价<a>免费</a></span><span>好评1928</span></li>
+                   </ul>
+               </div>
+               <div class="add_sub">
+                   <a class="sub">-</a>
+                   <a class="num">+</a>
+                   <a class="add">+</a>
+               </div>
+               <div style="clear:both;"></div>
+            </div>
+        
+            <div class="bookls">
+              <span class="bookimg"><img src="images/fogOrphan.png"></span>
+               <div class="book_content">
+                   <ul>
+                       <li>雾都孤儿</li>
+                       <li>定价：￥28.00元</li>
+                       <li>借阅时间：06:25-08:26</li>
+                       <li><span>借阅价<a>免费</a></span><span>好评1928</span></li>
+                   </ul>
+               </div>
+               <div class="add_sub">
+                   <a class="sub">-</a>
+                   <a class="num">+</a>
+                   <a class="add">+</a>
+               </div>
+               <div style="clear:both;"></div>
+            </div>
+        </div>
+            </div>
+            <div class="shoping">
+        <div class="price">
+            <span>
+              <a class="number">0</a>
+            </span>
+            <span>
+              <a>￥12.</a>
+              <a>00</a>
+            </span>
+        </div>
+        <span class="ok_btn">选好了</span>
+            </div> -->
+</body>
+<script>
+$(document).ready(function(){
+    var h = $("body").height();
+    $(".bg").css({"min-height":h});
+
+    $(".methods span").click(function(){
+        $(this).siblings("span").css({"background":"#fff","color":"#dcdcdc","border":"1px solid #dcdcdc;"})
+        $(this).css({"background":"#ff6d33","color":"#fff","  border":"1px solid #ff6d33"});
+    });
+
+    $(".ubtn li").click(function(){
+        $(".ubtn").find(".usel").removeClass("usel");
+
+        $(this).addClass("usel");
+    });
+
+    /*$(".num").click(function(){
+      if($(".sub").css("display")=="none") {
+        $(this).parent().find(".sub").show();
+        $(this).parent().find(".add").show();
+        $(this).html("0");
+      }else{
+        $(this).parent().find(".sub").hide();
+        $(this).parent().find(".add").hide();
+        $(this).html("+");
+      };
+    });
+
+    $(".add").click(function(){
+      var n = Number($(".number").html());
+      n++;
+      $(".number").html(n);
+    });
+    $(".sub").click(function(){
+      var n = Number($(".number").html());
+      if (n==0) {return;};
+      n--;
+      $(".number").html(n);
+    })*/
+
+});
+</script>
+</html>

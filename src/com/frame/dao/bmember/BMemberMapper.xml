@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.frame.dao.bmember.BMemberMapper" >
+  <resultMap id="BaseResultMap" type="com.frame.model.bmember.BMember" >
+    <id column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+    <result column="real_name" property="realName" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="is_live" property="isLive" jdbcType="CHAR" />
+    <result column="pwd" property="pwd" jdbcType="VARCHAR" />
+    <result column="id_card_no" property="idCardNo" jdbcType="VARCHAR" />
+    <result column="is_real" property="isReal" jdbcType="CHAR" />
+    <result column="register_time" property="registerTime" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="delFlag" jdbcType="CHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="usr_id" property="usrId" jdbcType="VARCHAR" />
+    <result column="check_code" property="checkCode" jdbcType="VARCHAR" />
+    <result column="user_pic_id" property="userPicId" jdbcType="INTEGER" />
+    <result column="standby1" property="standby1" jdbcType="VARCHAR" />
+    <result column="standby2" property="standby2" jdbcType="VARCHAR" />
+    <result column="standby3" property="standby3" jdbcType="VARCHAR" />
+    <result column="standby4" property="standby4" jdbcType="VARCHAR" />
+    <result column="standby5" property="standby5" jdbcType="INTEGER" />
+    <result column="standby6" property="standby6" jdbcType="INTEGER" />
+    <result column="is_source" property="isSource" jdbcType="CHAR" />
+    <result column="in_invite_code" property="inInviteCode" jdbcType="VARCHAR" />
+    <result column="out_invite_code" property="outInviteCode" jdbcType="VARCHAR" />
+    <result column="user_pic_url" property="userPicUrl" jdbcType="VARCHAR" />
+    <result column="validate_code" property="validateCode" jdbcType="VARCHAR" />
+    <result column="user_default_pic_url" property="userDefaultPicUrl" jdbcType="VARCHAR" />
+    <result column="out_source_Id" property="outSourceId" jdbcType="INTEGER" />
+    <result column="channel_coding" property="channelCoding" jdbcType="VARCHAR" />
+    <result column="job_occupation" property="jobOccupation" jdbcType="VARCHAR" />
+    <result column="hometown" property="hometown" jdbcType="VARCHAR" />
+    <result column="age" property="age" jdbcType="INTEGER" />
+    <result column="borrow_type" property="borrowType" jdbcType="VARCHAR" />
+    <result column="person_sign" property="personSign" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <association property="bLocation" javaType="com.frame.model.blocation.BLocation">
+    	<id column="location_id" property="locationId" jdbcType="INTEGER" />
+	    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+	    <result column="latitude" property="latitude" jdbcType="DOUBLE" />
+	    <result column="longitude" property="longitude" jdbcType="DOUBLE" />
+	    <result column="location_name" property="locationName" jdbcType="VARCHAR" />
+	    <result column="region_id" property="regionId" jdbcType="INTEGER" />
+	    <result column="speed" property="speed" jdbcType="DOUBLE" />
+	    <result column="accuracy" property="accuracy" jdbcType="DOUBLE" />
+	    <result column="is_used" property="isUsed" jdbcType="CHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    member_id, nick_name, real_name, email, mobile, is_live, pwd, id_card_no, is_real, 
+    register_time, del_flag, update_time, usr_id, check_code, user_pic_id, standby1, 
+    standby2, standby3, standby4, standby5, standby6, is_source, in_invite_code, out_invite_code, 
+    user_pic_url, validate_code, user_default_pic_url, out_source_Id, channel_coding, 
+    job_occupation, hometown, age, borrow_type,person_sign
+  </sql>
+  
+    <!-- 根据手机号查询用户是否存在 -->
+  <select id="selectMemberByPhoneNum" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	select 
+    <include refid="Base_Column_List" />
+    from b_member
+    where mobile = #{telphoneNum}
+  </select>
+  
+  <!-- 建立微信与用户关系 -->
+  <update id="updateWxInfo" parameterType="java.util.HashMap">
+  	update b_memberwx set member_id=#{memberId} where open_id=#{openId}
+  </update>
+  
+    <!-- 用户登录查询手机号和密码 -->
+  <select id="selectByMobileAndPas" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from b_member
+    where mobile = #{mobile} and pwd = #{passwd}
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    *
+    from b_member m left join b_location l on m.member_id = l.member_id
+    where m.member_id = #{memberId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_member
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.frame.model.bmember.BMember" >
+    insert into b_member (member_id, nick_name, real_name, 
+      email, mobile, is_live, 
+      pwd, id_card_no, is_real, 
+      register_time, del_flag, update_time, 
+      usr_id, check_code, user_pic_id, 
+      standby1, standby2, standby3, 
+      standby4, standby5, standby6, 
+      is_source, in_invite_code, out_invite_code, 
+      user_pic_url, validate_code, user_default_pic_url, 
+      out_source_Id, channel_coding, job_occupation, 
+      hometown, age, borrow_type,person_sign,sex
+      )
+    values (#{memberId,jdbcType=INTEGER}, #{nickName,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{isLive,jdbcType=CHAR}, 
+      #{pwd,jdbcType=VARCHAR}, #{idCardNo,jdbcType=VARCHAR}, #{isReal,jdbcType=CHAR}, 
+      #{registerTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=CHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{usrId,jdbcType=VARCHAR}, #{checkCode,jdbcType=VARCHAR}, #{userPicId,jdbcType=INTEGER}, 
+      #{standby1,jdbcType=VARCHAR}, #{standby2,jdbcType=VARCHAR}, #{standby3,jdbcType=VARCHAR}, 
+      #{standby4,jdbcType=VARCHAR}, #{standby5,jdbcType=INTEGER}, #{standby6,jdbcType=INTEGER}, 
+      #{isSource,jdbcType=CHAR}, #{inInviteCode,jdbcType=VARCHAR}, #{outInviteCode,jdbcType=VARCHAR}, 
+      #{userPicUrl,jdbcType=VARCHAR}, #{validateCode,jdbcType=VARCHAR}, #{userDefaultPicUrl,jdbcType=VARCHAR}, 
+      #{outSourceId,jdbcType=INTEGER}, #{channelCoding,jdbcType=VARCHAR}, #{jobOccupation,jdbcType=VARCHAR}, 
+      #{hometown,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{borrowType,jdbcType=VARCHAR},
+      #{personSign,jdbcType=VARCHAR},#{sex}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.frame.model.bmember.BMember" >
+    insert into b_member
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="nickName != null" >
+        nick_name,
+      </if>
+      <if test="realName != null" >
+        real_name,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="isLive != null" >
+        is_live,
+      </if>
+      <if test="pwd != null" >
+        pwd,
+      </if>
+      <if test="idCardNo != null" >
+        id_card_no,
+      </if>
+      <if test="isReal != null" >
+        is_real,
+      </if>
+      <if test="registerTime != null" >
+        register_time,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="usrId != null" >
+        usr_id,
+      </if>
+      <if test="checkCode != null" >
+        check_code,
+      </if>
+      <if test="userPicId != null" >
+        user_pic_id,
+      </if>
+      <if test="standby1 != null" >
+        standby1,
+      </if>
+      <if test="standby2 != null" >
+        standby2,
+      </if>
+      <if test="standby3 != null" >
+        standby3,
+      </if>
+      <if test="standby4 != null" >
+        standby4,
+      </if>
+      <if test="standby5 != null" >
+        standby5,
+      </if>
+      <if test="standby6 != null" >
+        standby6,
+      </if>
+      <if test="isSource != null" >
+        is_source,
+      </if>
+      <if test="inInviteCode != null" >
+        in_invite_code,
+      </if>
+      <if test="outInviteCode != null" >
+        out_invite_code,
+      </if>
+      <if test="userPicUrl != null" >
+        user_pic_url,
+      </if>
+      <if test="validateCode != null" >
+        validate_code,
+      </if>
+      <if test="userDefaultPicUrl != null" >
+        user_default_pic_url,
+      </if>
+      <if test="outSourceId != null" >
+        out_source_Id,
+      </if>
+      <if test="channelCoding != null" >
+        channel_coding,
+      </if>
+      <if test="jobOccupation != null" >
+        job_occupation,
+      </if>
+      <if test="hometown != null" >
+        hometown,
+      </if>
+      <if test="age != null" >
+        age,
+      </if>
+      <if test="borrowType != null" >
+        borrowType,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="nickName != null" >
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="realName != null" >
+        #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="isLive != null" >
+        #{isLive,jdbcType=CHAR},
+      </if>
+      <if test="pwd != null" >
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="idCardNo != null" >
+        #{idCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="isReal != null" >
+        #{isReal,jdbcType=CHAR},
+      </if>
+      <if test="registerTime != null" >
+        #{registerTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="usrId != null" >
+        #{usrId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkCode != null" >
+        #{checkCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userPicId != null" >
+        #{userPicId,jdbcType=INTEGER},
+      </if>
+      <if test="standby1 != null" >
+        #{standby1,jdbcType=VARCHAR},
+      </if>
+      <if test="standby2 != null" >
+        #{standby2,jdbcType=VARCHAR},
+      </if>
+      <if test="standby3 != null" >
+        #{standby3,jdbcType=VARCHAR},
+      </if>
+      <if test="standby4 != null" >
+        #{standby4,jdbcType=VARCHAR},
+      </if>
+      <if test="standby5 != null" >
+        #{standby5,jdbcType=INTEGER},
+      </if>
+      <if test="standby6 != null" >
+        #{standby6,jdbcType=INTEGER},
+      </if>
+      <if test="isSource != null" >
+        #{isSource,jdbcType=CHAR},
+      </if>
+      <if test="inInviteCode != null" >
+        #{inInviteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="outInviteCode != null" >
+        #{outInviteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userPicUrl != null" >
+        #{userPicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="validateCode != null" >
+        #{validateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userDefaultPicUrl != null" >
+        #{userDefaultPicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="outSourceId != null" >
+        #{outSourceId,jdbcType=INTEGER},
+      </if>
+      <if test="channelCoding != null" >
+        #{channelCoding,jdbcType=VARCHAR},
+      </if>
+      <if test="jobOccupation != null" >
+        #{jobOccupation,jdbcType=VARCHAR},
+      </if>
+      <if test="hometown != null" >
+        #{hometown,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null" >
+        #{age,jdbcType=INTEGER},
+      </if>
+      <if test="borrowType != null" >
+        #{borrowType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.frame.model.bmember.BMember" >
+    update b_member
+    <set >
+      <if test="nickName != null" >
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="realName != null" >
+        real_name = #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="isLive != null" >
+        is_live = #{isLive,jdbcType=CHAR},
+      </if>
+      <if test="pwd != null" >
+        pwd = #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="idCardNo != null" >
+        id_card_no = #{idCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="isReal != null" >
+        is_real = #{isReal,jdbcType=CHAR},
+      </if>
+      <if test="registerTime != null" >
+        register_time = #{registerTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="usrId != null" >
+        usr_id = #{usrId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkCode != null" >
+        check_code = #{checkCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userPicId != null" >
+        user_pic_id = #{userPicId,jdbcType=INTEGER},
+      </if>
+      <if test="standby1 != null" >
+        standby1 = #{standby1,jdbcType=VARCHAR},
+      </if>
+      <if test="standby2 != null" >
+        standby2 = #{standby2,jdbcType=VARCHAR},
+      </if>
+      <if test="standby3 != null" >
+        standby3 = #{standby3,jdbcType=VARCHAR},
+      </if>
+      <if test="standby4 != null" >
+        standby4 = #{standby4,jdbcType=VARCHAR},
+      </if>
+      <if test="standby5 != null" >
+        standby5 = #{standby5,jdbcType=INTEGER},
+      </if>
+      <if test="standby6 != null" >
+        standby6 = #{standby6,jdbcType=INTEGER},
+      </if>
+      <if test="isSource != null" >
+        is_source = #{isSource,jdbcType=CHAR},
+      </if>
+      <if test="inInviteCode != null" >
+        in_invite_code = #{inInviteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="outInviteCode != null" >
+        out_invite_code = #{outInviteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userPicUrl != null" >
+        user_pic_url = #{userPicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="validateCode != null" >
+        validate_code = #{validateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userDefaultPicUrl != null" >
+        user_default_pic_url = #{userDefaultPicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="outSourceId != null" >
+        out_source_Id = #{outSourceId,jdbcType=INTEGER},
+      </if>
+      <if test="channelCoding != null" >
+        channel_coding = #{channelCoding,jdbcType=VARCHAR},
+      </if>
+      <if test="jobOccupation != null" >
+        job_occupation = #{jobOccupation,jdbcType=VARCHAR},
+      </if>
+      <if test="hometown != null" >
+        hometown = #{hometown,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null" >
+        age = #{age,jdbcType=INTEGER},
+      </if>
+      <if test="borrowType != null" >
+        borrow_type = #{borrowType,jdbcType=VARCHAR},
+      </if>
+      <if test="personSign != null" >
+        person_sign = #{personSign,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.frame.model.bmember.BMember" >
+    update b_member
+    set nick_name = #{nickName,jdbcType=VARCHAR},
+      real_name = #{realName,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      is_live = #{isLive,jdbcType=CHAR},
+      pwd = #{pwd,jdbcType=VARCHAR},
+      id_card_no = #{idCardNo,jdbcType=VARCHAR},
+      is_real = #{isReal,jdbcType=CHAR},
+      register_time = #{registerTime,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=CHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      usr_id = #{usrId,jdbcType=VARCHAR},
+      check_code = #{checkCode,jdbcType=VARCHAR},
+      user_pic_id = #{userPicId,jdbcType=INTEGER},
+      standby1 = #{standby1,jdbcType=VARCHAR},
+      standby2 = #{standby2,jdbcType=VARCHAR},
+      standby3 = #{standby3,jdbcType=VARCHAR},
+      standby4 = #{standby4,jdbcType=VARCHAR},
+      standby5 = #{standby5,jdbcType=INTEGER},
+      standby6 = #{standby6,jdbcType=INTEGER},
+      is_source = #{isSource,jdbcType=CHAR},
+      in_invite_code = #{inInviteCode,jdbcType=VARCHAR},
+      out_invite_code = #{outInviteCode,jdbcType=VARCHAR},
+      user_pic_url = #{userPicUrl,jdbcType=VARCHAR},
+      validate_code = #{validateCode,jdbcType=VARCHAR},
+      user_default_pic_url = #{userDefaultPicUrl,jdbcType=VARCHAR},
+      out_source_Id = #{outSourceId,jdbcType=INTEGER},
+      channel_coding = #{channelCoding,jdbcType=VARCHAR},
+      job_occupation = #{jobOccupation,jdbcType=VARCHAR},
+      hometown = #{hometown,jdbcType=VARCHAR},
+      age = #{age,jdbcType=INTEGER},
+      borrow_type = #{borrowType,jdbcType=VARCHAR},
+      person_sign = #{personSign,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR}
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </update>
+</mapper>

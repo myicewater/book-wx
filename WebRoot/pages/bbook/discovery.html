@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <meta content="-1" http-equiv="Expires">
+    <meta content="no-cache" http-equiv="Cache-Control">
+    <meta content="no-cache" http-equiv="Pragma">
+    <title>发现活动</title>
+    <script type="text/javascript" src="${ctx}/js/jquery-2.1.1.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="${ctx}/css/style.css">
+    <script type="text/javascript">
+        $(function(){
+            fontSize();
+            $(window).on('resize',function(){
+                fontSize();
+            });
+            function fontSize(){
+                var winW = $(window).width();
+                var fontsize = winW/20;
+                if(winW>=320){
+                    $('html').css('font-size',fontsize);
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="bg">
+        <div class="fa_book">
+            <span><img src="${ctx}/images/find_active.png"></span>
+            <p>一场关于书的分享交流会</p>
+            <span><a>浏览500次</a><a>收藏268人</a><a>已参加人数200人</a></span>
+        </div>
+        <div class="my_list hlist">
+            <ul style="margin:0;">
+                <li>
+                    <span><img src="${ctx}/images/time.png"></span>
+                    <span>2015-07-08 09:30 - 2015-07-08 09:30</span>
+                    <span class="arrowr"><img src="${ctx}/images/arrow_right.png"></span>
+                </li>
+                <li>
+                    <span><img src="${ctx}/images/wode3.png"></span>
+                    <span>北京市朝阳区安立路28号</span>
+                    <span class="arrowr"><img src="${ctx}/images/arrow_right.png"></span>
+                </li>
+                <li>
+                    <span><img src="${ctx}/images/Wallet.png"></span>
+                    <span style="color:#2bd6be;">免费</span>
+                    <span class="arrowr"><img src="${ctx}/images/arrow_right.png"></span>
+                </li>
+            </ul>  
+        </div>
+        <div class="zb_name">
+            <ul>
+                <li>
+                    <a class="uhead"><img src="${ctx}/images/head.png"></a>
+                    <span>疯狂俱乐部</span>
+                    <a>发布</a> 
+                </li>
+                <li>
+                    <p>为鼓励和引导公司团员青年养成多读书、读好书的习惯，做到勤于思考，勤于探索，学以致用，用有所成，把学习的体会和成果转化为谋划工作的思路......</p>
+                </li>
+                <li>
+                    <span style="color:#333333;">更多详情</span>
+                    <span class="arrowr"><img src="${ctx}/images/arrow_right.png"></span>
+                </li>
+            </ul>
+            <div style="clear:both;"></div>
+        </div>
+    <div>
+    <div class="bottom_btn02">
+        <ul>
+            <li><a class="collect"><img src="${ctx}/images/shoucang.png" /></a><a class="sel_btn">收藏</a></li>
+            <li><a class="share"><img src="${ctx}/images/fenxiang_icon.png" /></a><a class="sel_btn">分享</a></li>
+            <li><span class="baomimg">立即报名</span></li>
+        </ul>
+    </div>    
+</body>
+<script>
+$(document).ready(function(){
+    var h = $("body").height();
+    $(".bg").css({"min-height":h});
+
+    $(".bottom_btn02 li").eq(0).find(".sel_btn").css("color","#ff6d33");
+    var i=0;
+    $(".bottom_btn02 li").click(function(){
+        $(".bottom_btn02 li").each(function(i){
+        switch(i){
+            case 0:
+               i=0;
+               $(".collect").find("img").attr("src","${ctx}/images/shoucang_icon.png");
+               $(this).find(".sel_btn").css("color","#999999");
+            case 1:
+                i=1;
+               $(".share").find("img").attr("src","${ctx}/images/fenxiang_icon.png");
+               $(this).find(".sel_btn").css("color","#999999"); 
+            case 2:
+                i=2;
+               $(this).find(".baomimg").css("background","#ff7741");
+            }
+        });
+        if (i=2) {
+            $(this).find(".baomimg").css("background","#999999");
+        }else{
+            var src = $(this).find("img").attr("src").split("_")[0]+".png";
+            $(this).find("img").attr("src",src);
+            $(this).find(".sel_btn").css("color","#ff6d33");    
+        };
+          
+    });
+});
+</script>
+</html>

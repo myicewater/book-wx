@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.frame.dao.bpublisher.BPublisherMapper" >
+  <resultMap id="BaseResultMap" type="com.frame.model.bpublisher.BPublisher" >
+    <id column="publish_id" property="publishId" jdbcType="INTEGER" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="book_id" property="bookId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="lend_time" property="lendTime" jdbcType="TIMESTAMP" />
+    <result column="lend_end_time" property="lendEndTime" jdbcType="TIMESTAMP" />
+    <result column="lend_days" property="lendDays" jdbcType="INTEGER" />
+    <result column="lend_fee" property="lendFee" jdbcType="DOUBLE" />
+    <result column="collectedCount" property="collectedCount" jdbcType="INTEGER" />
+    <association property="book" javaType="com.frame.model.bbook.BBook">
+    	<id column="book_id" property="bookId" jdbcType="INTEGER" />
+	    <result column="subtitle" property="subtitle" jdbcType="VARCHAR" />
+	    <result column="isbn" property="isbn" jdbcType="VARCHAR" />
+	    <result column="author" property="author" jdbcType="VARCHAR" />
+	    <result column="origin_title" property="originTitle" jdbcType="VARCHAR" />
+	    <result column="binding" property="binding" jdbcType="VARCHAR" />
+	    <result column="pages" property="pages" jdbcType="INTEGER" />
+	    <result column="images_small" property="imagesSmall" jdbcType="VARCHAR" />
+	    <result column="images_large" property="imagesLarge" jdbcType="VARCHAR" />
+	    <result column="images_medium" property="imagesMedium" jdbcType="VARCHAR" />
+	    <result column="publisher" property="publisher" jdbcType="VARCHAR" />
+	    <result column="title" property="title" jdbcType="VARCHAR" />
+	    <result column="author_intro" property="authorIntro" jdbcType="VARCHAR" />
+	    <result column="summary" property="summary" jdbcType="VARCHAR" />
+	    <result column="price" property="price" jdbcType="DOUBLE" />
+	    <result column="beizhu" property="beizhu" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="DATE" />
+	    <result column="is_pass" property="isPass" jdbcType="CHAR" />
+    </association>
+    <association property="member" javaType="com.frame.model.bmember.BMember">
+    	<id column="member_id" property="memberId" jdbcType="INTEGER" />
+	    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+	    <result column="real_name" property="realName" jdbcType="VARCHAR" />
+	    <result column="email" property="email" jdbcType="VARCHAR" />
+	    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+	    <result column="is_live" property="isLive" jdbcType="CHAR" />
+	    <result column="pwd" property="pwd" jdbcType="VARCHAR" />
+	    <result column="id_card_no" property="idCardNo" jdbcType="VARCHAR" />
+	    <result column="is_real" property="isReal" jdbcType="CHAR" />
+	    <result column="register_time" property="registerTime" jdbcType="TIMESTAMP" />
+	    <result column="del_flag" property="delFlag" jdbcType="CHAR" />
+	    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	    <result column="usr_id" property="usrId" jdbcType="VARCHAR" />
+	    <result column="check_code" property="checkCode" jdbcType="VARCHAR" />
+	    <result column="user_pic_id" property="userPicId" jdbcType="INTEGER" />
+	    <result column="standby1" property="standby1" jdbcType="VARCHAR" />
+	    <result column="standby2" property="standby2" jdbcType="VARCHAR" />
+	    <result column="standby3" property="standby3" jdbcType="VARCHAR" />
+	    <result column="standby4" property="standby4" jdbcType="VARCHAR" />
+	    <result column="standby5" property="standby5" jdbcType="INTEGER" />
+	    <result column="standby6" property="standby6" jdbcType="INTEGER" />
+	    <result column="is_source" property="isSource" jdbcType="CHAR" />
+	    <result column="in_invite_code" property="inInviteCode" jdbcType="VARCHAR" />
+	    <result column="out_invite_code" property="outInviteCode" jdbcType="VARCHAR" />
+	    <result column="user_pic_url" property="userPicUrl" jdbcType="VARCHAR" />
+	    <result column="validate_code" property="validateCode" jdbcType="VARCHAR" />
+	    <result column="user_default_pic_url" property="userDefaultPicUrl" jdbcType="VARCHAR" />
+	    <result column="out_source_Id" property="outSourceId" jdbcType="INTEGER" />
+	    <result column="channel_coding" property="channelCoding" jdbcType="VARCHAR" />
+	    <result column="job_occupation" property="jobOccupation" jdbcType="VARCHAR" />
+	    <result column="hometown" property="hometown" jdbcType="VARCHAR" />
+	    <result column="age" property="age" jdbcType="INTEGER" />
+	    <result column="borrow_type" property="borrowType" jdbcType="VARCHAR" />
+  	    <result column="person_sign" property="personSign" jdbcType="VARCHAR" />
+	    <association property="bLocation" javaType="com.frame.model.blocation.BLocation">
+	    	<id column="location_id" property="locationId" jdbcType="INTEGER" />
+		    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+		    <result column="latitude" property="latitude" jdbcType="DOUBLE" />
+		    <result column="longitude" property="longitude" jdbcType="DOUBLE" />
+		    <result column="location_name" property="locationName" jdbcType="VARCHAR" />
+		    <result column="region_id" property="regionId" jdbcType="INTEGER" />
+		    <result column="speed" property="speed" jdbcType="DOUBLE" />
+		    <result column="accuracy" property="accuracy" jdbcType="DOUBLE" />
+		    <result column="is_used" property="isUsed" jdbcType="CHAR" />
+		    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    </association>
+    </association>
+  </resultMap>
+  
+  <update id="updatePublisherStatusFree" parameterType="map">
+  	update b_publisher t set t.`status`='W' where t.publish_id = (select t.publisher_id from  b_order t where t.order_id=#{orderId})
+  </update>
+  
+  <update id="updatePublisherState" parameterType="java.lang.Integer">
+  	update b_publisher t set t.`status`='L' where t.publish_id = #{publisherId}
+  </update>
+  
+  <select id="getBookDetail" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	select t.*,b.*,m.*, l.*
+  	from b_publisher t join b_book b on t.book_id=b.book_id
+  	join b_member m on t.member_id=m.member_id
+  	left join b_location l on t.member_id =l.member_id
+  	where t.publish_id=#{publishId}
+  	
+  	
+  </select>
+  
+  <select id="getPublisherByMemberId" resultMap="BaseResultMap" parameterType="map">
+   select 
+    <include refid="Base_Column_List" />
+    from b_publisher
+    where member_id = #{memberId,jdbcType=INTEGER} and book_id = #{bookId}
+  </select>
+  
+  <select id="getBooks" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+  	select t.*,b.*,m.*, l.*
+  	from b_publisher t join b_book b on t.book_id=b.book_id
+  	join b_member m on t.member_id=m.member_id
+  	left join b_location l on t.member_id =l.member_id
+  	where t.is_used = 1
+  	limit #{listNum} 
+  </select>
+  
+  <select id="getBooksByKewWord" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	select t.*,b.*,m.*, l.*
+  	from b_publisher t join b_book b on t.book_id=b.book_id
+  	join b_member m on t.member_id=m.member_id
+  	left join b_location l on t.member_id =l.member_id
+  	where t.is_used = 1 and b.title like CONCAT('%',#{keyWord},'%')
+  </select>
+  
+  <select id="getMyBooks" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+  	select t.*,b.*,m.*, l.*,IFNULL(ccc.collectCount,0) collectedCount
+  	from b_publisher t join b_book b on t.book_id=b.book_id
+		left join (select count(*) as collectCount,publish_id as ppid from b_collections  GROUP BY publish_id) ccc on t.publish_id = ccc.ppid
+  	join b_member m on t.member_id=m.member_id
+  	left join b_location l on t.member_id =l.member_id
+  	where t.member_id = #{memberId} and t.is_used = 1
+  </select>
+  
+  <sql id="Base_Column_List" >
+    publish_id, member_id, book_id, create_time, status, lend_time, lend_end_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_publisher
+    where publish_id = #{publishId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_publisher
+    where publish_id = #{publishId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.frame.model.bpublisher.BPublisher" >
+    insert into b_publisher (publish_id, member_id, book_id, 
+      create_time, status, lend_time, 
+      lend_end_time,is_used,lend_fee,lend_days)
+    values (#{publishId,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{bookId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{status,jdbcType=CHAR}, #{lendTime,jdbcType=TIMESTAMP}, 
+      #{lendEndTime,jdbcType=TIMESTAMP},'1',#{lendFee},#{lendDays})
+  </insert>
+  <insert id="insertSelective" parameterType="com.frame.model.bpublisher.BPublisher" >
+    insert into b_publisher
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="publishId != null" >
+        publish_id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="bookId != null" >
+        book_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="lendTime != null" >
+        lend_time,
+      </if>
+      <if test="lendEndTime != null" >
+        lend_end_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="publishId != null" >
+        #{publishId,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="bookId != null" >
+        #{bookId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="lendTime != null" >
+        #{lendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lendEndTime != null" >
+        #{lendEndTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.frame.model.bpublisher.BPublisher" >
+    update b_publisher
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="bookId != null" >
+        book_id = #{bookId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=CHAR},
+      </if>
+      <if test="lendTime != null" >
+        lend_time = #{lendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lendEndTime != null" >
+        lend_end_time = #{lendEndTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where publish_id = #{publishId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.frame.model.bpublisher.BPublisher" >
+    update b_publisher
+    set member_id = #{memberId,jdbcType=INTEGER},
+      book_id = #{bookId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=CHAR},
+      lend_time = #{lendTime,jdbcType=TIMESTAMP},
+      lend_end_time = #{lendEndTime,jdbcType=TIMESTAMP}
+    where publish_id = #{publishId,jdbcType=INTEGER}
+  </update>
+</mapper>

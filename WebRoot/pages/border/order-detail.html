@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <meta content="-1" http-equiv="Expires">
+    <meta content="no-cache" http-equiv="Cache-Control">
+    <meta content="no-cache" http-equiv="Pragma">
+    <title>书单详情页</title>
+    <script type="text/javascript" src="${ctx}/js/jquery-2.1.1.min.js"></script>
+    <script src="${ctx}/js/iscroll.js"></script>
+    <link type="text/css" rel="stylesheet" href="${ctx}/css/style.css">
+    <script type="text/javascript">
+        $(function(){
+            fontSize();
+            $(window).on('resize',function(){
+                fontSize();
+            });
+            function fontSize(){
+                var winW = $(window).width();
+                var fontsize = winW/20;
+                if(winW>=320){
+                    $('html').css('font-size',fontsize);
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="bg">
+        <div class="book_list">
+            <div class="bookls booklsbg">
+              <span class="bookimg" style="background: url(${bOrder.bPublisher.book.imagesLarge});background-size: 100% 100%;"><!-- <img src="images/fogOrphan.png"> --></span>
+               <div class="book_content"  style="width:11rem;">
+                   <ul>
+                       <li>${bOrder.bPublisher.book.title}</li>
+                       <li>还书日期：${bOrder.returnDate?string('yyyy-MM-dd')}
+                       <a class="borrow_way">
+                       	<#if bOrder.bPublisher.member.borrowType == 0>
+                       	取
+                       	<#elseif bOrder.bPublisher.member.borrowType == 1>
+                       	送
+                       	<#else>
+                       	
+                       	</#if>
+                       	</a></li>
+                       <li class="borrow_info">借阅价:<a>
+                       <#if (bOrder.bPublisher.lendFee)??>${bOrder.bPublisher.lendFee}元<#else>免费</#if>
+                       </a></li>
+                   </ul>
+               </div>
+               <span class="bookstate"><img src="${ctx}/images/shenqingzhong.png"></span>
+               <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div class="bu_info">
+        
+        <#if bOrder.borrower == memberId>
+           <ul>
+            <li class="pp">
+                <span>
+                <#if (bOrder.bPublisher.member.userPicUrl)?? >
+                	<img src="${ctx}/${uploadRelatedPath}${bOrder.bPublisher.member.userPicUrl}"></span>
+                <#else>
+                	<img src="${ctx}/images/queen.png"></span>
+                </#if>
+                <span>${bOrder.bPublisher.member.nickName}</span>
+            </li>
+            <li class="pp adr">
+                <span><img src="${ctx}/images/location_T.png"></span>
+                <span>${bOrder.bPublisher.member.bLocation.locationName}</span>
+            </li>
+            <li class="pp pho">
+                <span><img src="${ctx}/images/phone.png"></span>
+                <span>${bOrder.bPublisher.member.mobile}</span>
+            </li>
+          </ul>
+         </#if> 
+		
+		<#if bOrder.bPublisher.member.memberId == memberId>
+		 <ul>
+            <li class="pp">
+                <span>
+                <#if (bOrder.borrowMember.userPicUrl)?? >
+                	<img src="${ctx}/${uploadRelatedPath}/${bOrder.borrowMember.userPicUrl}"></span>
+                <#else>
+                	<img src="${ctx}/images/queen.png"></span>
+                </#if>
+                <span>${bOrder.borrowMember.nickName}</span>
+            </li>
+            <li class="pp adr">
+                <span><img src="${ctx}/images/location_T.png"></span>
+                <span>${bOrder.borrowMember.bLocation.locationName}</span>
+            </li>
+            <li class="pp pho">
+                <span><img src="${ctx}/images/phone.png"></span>
+                <span>${bOrder.borrowMember.mobile}</span>
+            </li>
+          </ul> 
+          </#if>
+          
+        </div>
+        
+        <!-- <p>书单状态：</p>
+        <#if bOrder.status == 0>
+          	申请中
+        <#elseif bOrder.status == 1>
+       		 图书传递中
+        <#elseif bOrder.status == 2>
+       	图书阅读中
+       	<#elseif bOrder.status == 3>
+       	待评价
+       	<#elseif bOrder.status == 4>
+       	已评价
+       	<#elseif bOrder.status == 9>
+       	拒绝
+       	</#if>
+       	<br><br> -->
+       	
+       	
+      <#if bOrder.borrower == memberId>
+      <div class="doublebtn">
+        <#if bOrder.status == 1>
+        <span onclick="updateOrderStatus(${bOrder.orderId},'2')" class="double_one">借到书了</span>
+       		<!-- <input onclick="updateOrderStatus(${bOrder.orderId},'2')" type="button" value="借到书了" /> -->
+       	<#elseif bOrder.status == 3>
+       	<span onclick="comment(${bOrder.orderId})" class="double_one">评价</span>
+       		<!-- <input onclick="comment(${bOrder.orderId})" type="button" value="评价" /> -->
+       	</#if>
+       	 </div>
+      </#if> 
+      
+      <#if bOrder.bPublisher.member.memberId == memberId>
+      <div class="doublebtn">
+       		<#if bOrder.status == 0>
+       			<span onclick="updateOrderStatus(${bOrder.orderId},'1')" class="double_one">同意借书</span>
+                <span onclick="updateOrderStatus(${bOrder.orderId},'9')"  class="double_one">拒绝借书</span>
+       			<!-- <input onclick="updateOrderStatus(${bOrder.orderId},'1')" type="button" value="同意借书" />
+		       	<input onclick="updateOrderStatus(${bOrder.orderId},'9')" type="button" value="拒绝借书" /> -->
+		       	<#elseif bOrder.status == 2>
+		       	<span onclick="updateOrderStatus(${bOrder.orderId},'3')" class="double_one">图书归还了</span>
+		       	 <!-- <input onclick="updateOrderStatus(${bOrder.orderId},'3')" type="button" value="图书归还了" /> -->
+		     </#if>
+		     </div>
+	  </#if>
+       
+     <!--  <div class="doublebtn">
+            <span class="double_one">同意借阅此书</span>
+            <span class="double_one ckbtn">拒绝借阅此书</span>
+            <div style="clear:both;"></div>    
+       </div> -->
+    </div>
+</body>
+<script>
+
+function comment(orderId){
+		window.location.href="${ctx}/bcomment/toComment.htm?orderId="+orderId;
+}
+
+function updateOrderStatus(orderId,status){
+	console.log("update")
+	var url = "${ctx}/border/updateOrderStatus.htm";
+	 $.ajax({
+	  type: "post",
+	        dataType: "json",
+	        url: url,
+	        data: {
+	          "orderId":orderId,
+	          "status":status
+	        },
+	        success: function(data){
+	        	 if(data.resultCode == "00"){
+	                    alert("操作成功");
+	                    //history.go(0)
+	                    window.location.href="${ctx}/bbook/tounDealBookOrders.htm"
+	            }else{
+	                    alert("");
+	            }
+	        }
+	 });
+}
+
+$(document).ready(function(){
+    var h = $("body").height();
+    $(".bg").css({"min-height":h});
+});
+
+</script>
+</html>

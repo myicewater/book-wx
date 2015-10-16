@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <meta content="-1" http-equiv="Expires">
+    <meta content="no-cache" http-equiv="Cache-Control">
+    <meta content="no-cache" http-equiv="Pragma">
+    <title>我的</title>
+    <script type="text/javascript" src="${ctx}/js/jquery-2.1.1.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="${ctx}/css/style.css">
+    <script type="text/javascript">
+        $(function(){
+            fontSize();
+            $(window).on('resize',function(){
+                fontSize();
+            });
+            function fontSize(){
+                var winW = $(window).width();
+                var fontsize = winW/20;
+                if(winW>=320){
+                    $('html').css('font-size',fontsize);
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="bg">
+        <div class="user_title">
+            <ul>
+                <li onclick="javascript:window.location.href='${ctx}/bmember/toEditMemberInfo.htm'">
+                    <span class="ut"></span>
+                    <div>
+                        <span>${member.nickName}</span>
+                        <span>总监<a>女</a></span>
+                    </div>
+                    <span class="arrowr"><img src="${ctx}/images/arrow_right.png"></span>
+                </li>
+            </ul>
+        </div>
+        <div class="my_list">
+            <ul>
+                <li onclick="javascript:window.location.href='${ctx}/bbook/toMyInBookOrder.htm'">
+                    <span><img src="${ctx}/images/wode1.png"></span>
+                    <span>我的书单</span>
+                    <span class="arrowr"><img src="${ctx}/images/arrow_right.png"></span>
+                </li>
+                <li onclick="javascript:window.location.href='${ctx}/bcollection/getMyCollections.htm'">
+                    <span><img src="${ctx}/images/shoucang02.png"></span>
+                    <span>我的收藏</span>
+                    <span class="arrowr"><img src="${ctx}/images/arrow_right.png"></span>
+                </li>
+                <li>
+                    <span><img src="${ctx}/images/guanzhu.png"></span>
+                    <span>我的关注</span>
+                    <span class="arrowr"><img src="${ctx}/images/arrow_right.png"></span>
+                </li>
+                <li onclick="javascript:window.location.href='${ctx}/bmember/toEditAddress.htm'">
+                    <span><img src="${ctx}/images/wode3.png"></span>
+                    <span>我的地址</span>
+                    <span class="arrowr"><img src="${ctx}/images/arrow_right.png"></span>
+                </li>
+            </ul>
+            <ul>
+                <li onclick="window.location.href='${ctx}/bbook/getMyBooks.htm'">
+                    <span><img src="${ctx}/images/wodetushu.png"></span>
+                    <span>我的图书</span>
+                    <span class="arrowr"><img src="${ctx}/images/arrow_right.png"></span>
+                </li>
+            </ul>    
+        </div>
+        <div onclick="javascript:window.location.href='${ctx}/bbook/toPublishBook.htm'" class="bbtn02">发布闲书</div>   
+    </div>
+    <div class="bottom_btn">
+        <ul>
+            <li onclick="javascript:window.location.href='${ctx}/bbook/toBookIndex.htm'"><a class="pageone"><img src="${ctx}/images/home_icon.png" /></a><a class="sel_btn">首页</a></li>
+            <li onclick="javascript:window.location.href='${ctx}/bbook/tounDealBookOrders.htm'"><a class="bookone"><img src="${ctx}/images/menu_icon.png" /></a><a class="sel_btn">书单</a></li>
+            <li><a class="bookfind"><img src="${ctx}/images/discover_icon.png" /></a><a class="sel_btn">发现</a></li>
+            <li onclick="javascript:window.location.href='${ctx}/bmember/toMemberCenter.htm'"><a class="bookmy"><img src="${ctx}/images/me.png" /></a><a class="sel_btn">我的</a></li>
+        </ul>
+    </div>
+</body>
+<script>
+$(document).ready(function(){
+    $(".bottom_btn li").click(function(){
+        $(".bottom_btn li").each(function(i){
+        switch(i){
+            case 0:
+               $(".pageone").find("img").attr("src","${ctx}/images/home_icon.png");
+               $(this).find(".sel_btn").css("color","#999999");
+            case 1:
+               $(".bookone").find("img").attr("src","${ctx}/images/menu_icon.png");
+               $(this).find(".sel_btn").css("color","#999999");
+            case 2:
+               $(".bookfind").find("img").attr("src","${ctx}/images/discover_icon.png"); 
+               $(this).find(".sel_btn").css("color","#999999");  
+            case 3:
+               $(".bookmy").find("img").attr("src","${ctx}/images/me_icon.png");
+               $(this).find(".sel_btn").css("color","#999999");
+            }
+        });
+        var src = $(this).find("img").attr("src").split("_")[0]+".png";
+            $(this).find("img").attr("src",src);
+            $(this).find(".sel_btn").css("color","#ff6d33");  
+    });
+});
+</script>
+</html>

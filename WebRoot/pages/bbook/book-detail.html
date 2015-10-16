@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <meta content="-1" http-equiv="Expires">
+    <meta content="no-cache" http-equiv="Cache-Control">
+    <meta content="no-cache" http-equiv="Pragma">
+    <title>详情页</title>
+    <script type="text/javascript" src="../js/jquery-2.1.1.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="../css/style.css">
+    
+    <script type="text/javascript">
+        
+        function borrow(){
+        	
+        	var url = "${ctx}/border/buildBookOrder.htm";
+        	 $.ajax({
+        	  type: "post",
+        	        dataType: "json",
+        	        url: url,
+        	        data: {
+        	        	"publishId":"${bPublisher.publishId}",
+        	        	"location":"${bPublisher.member.bLocation.locationName}",
+        	        	"borrowType":"${bPublisher.member.borrowType}",
+        	        	"borrowDays":"${bPublisher.lendDays}"
+        	        },
+        	        success: function(data){
+        	           if(data.resultCode == "00"){
+        	        	   alert("申请成功");
+        	        	   window.location.href="${ctx}/bbook/tounDealBookOrders.htm"
+        	           }else{
+        	        	   alert("申请失败");
+        	           }
+        	        }
+        	 });
+        	
+        }
+        
+	function collect(){
+        	
+        	var url = "${ctx}/bcollection/collectBook.htm";
+        	 $.ajax({
+        	  type: "post",
+        	        dataType: "json",
+        	        url: url,
+        	        data: {
+        	        	"publishId":"${bPublisher.publishId}"
+        	        	
+        	        },
+        	        success: function(data){
+        	           if(data.resultCode == "00"){
+        	        	   alert("收藏成功");
+        	        	   //window.location.href="${ctx}/bbook/toMyInBookOrder.htm"
+        	        	   history.go(0);
+        	           }else{
+        	        	   alert("申请失败");
+        	           }
+        	        }
+        	 });
+        	
+        }
+        
+    </script>
+    <script type="text/javascript">
+        $(function(){
+            fontSize();
+            $(window).on('resize',function(){
+                fontSize();
+            });
+            function fontSize(){
+                var winW = $(window).width();
+                var fontsize = winW/20;
+                if(winW>=320){
+                    $('html').css('font-size',fontsize);
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="bg">
+        <div class="pp">
+            <span><img src="${ctx}/${bPublisher.member.userPicUrl}"></span>
+            <span>${bPublisher.member.nickName}</span>
+        </div>
+        <div class="pb_info" >
+          <div class="fleft" style="background: url(${bPublisher.book.imagesLarge})">
+            <a class="sign_icon">
+                <img src="../images/no_borrow01.png">
+            </a>
+          </div>
+          <div class="fright">
+            <ul>
+              <h1>${bPublisher.book.title}</h1>
+              <li>ISBN:${bPublisher.book.isbn}</li>
+              <li>作者：${bPublisher.book.author}</li>
+              <li>页数：${bPublisher.book.pages}页</li>
+              <li>定价：￥${bPublisher.book.price}</li>
+              <li>借阅天数：${bPublisher.lendDays}天</li>
+              <li>借阅价<a>${bPublisher.lendFee}</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="pb_info02">
+          <div class="pb_adress">
+            <a class="pba_icon"><img src="../images/location_T.png"></a>
+            <span class="p_adress">${bPublisher.member.bLocation.locationName}</span>
+            <span class="methods02">
+            
+            <a style="background:#fff;color:#dcdcdc;border:1px solid #dcdcdc;">送</a><a>取</a>
+            
+            </span>
+          </div>
+          <div class="intro">
+            <span>内容简介：${bPublisher.book.summary}</span>
+            <!-- <a class="open">展开<img class="da_icon" src="images/d_a.png"></a> -->
+          </div>
+        </div>
+        <div class="user_title ut02">评论(15)条</div>
+        <div class="cm_list">
+            <ul>
+                <li>
+                    <span class="uimg"><img src="../images/queen.png"></span>
+                    <div class="cm_info">
+                        <a class="cm_name">唯有暗香</a>
+                        <span class="cm_img">
+                            <a><img src="../images/Like.png"></a><a><img src="../images/Like.png"></a><a><img src="../images/Like.png"></a><a><img src="../images/Like.png"></a>
+                        </span>
+                    </div>
+                    <p>这本书真好</p>
+                    <span class="cm_date">2015-01-10 11:04:38</span>
+                    <div style="clear:both;"></div>
+                </li>
+            </ul>
+        </div>
+        <div class="btn_more">查看更多</div>
+        <div class="btn_sel">
+            <span onclick="borrow()">借阅此书</span>
+            <span onclick="collect()">收藏此书</span>
+            <span class="click_sel">返回图书列表</span>
+        </div>
+    </div>    
+</body>
+<script>
+$(document).ready(function(){
+    /* $(".methods02 a").click(function(){
+        $(this).siblings("a").css({"background":"#fff","color":"#dcdcdc","border":"1px solid #dcdcdc;"})
+        $(this).css({"background":"#ff6d33","color":"#fff","  border":"1px solid #ff6d33"});
+    }); */
+
+    /* $(".btn_sel span").click(function(){
+        $(this).siblings("span").css({"background":"#fff","color":"#666666","border":"1px solid #eeeeee;"})
+        $(this).css({"background":"#ff6d33","color":"#fff","  border":"1px solid #ff6d33"});
+    }); */
+    
+	$(".open").click(function(){
+        if ($(".open_text").html()=="展开") {
+            $(".open_text").html("收起");
+            $(this).find("img").attr("src","images/d_a2.png");
+        }else{
+            $(".open_text").html("展开");
+            $(this).find("img").attr("src","images/d_a.png");
+        };
+    });
+});
+</script>
+</html>

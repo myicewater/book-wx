@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <meta content="-1" http-equiv="Expires">
+    <meta content="no-cache" http-equiv="Cache-Control">
+    <meta content="no-cache" http-equiv="Pragma">
+    <title>我的书单</title>
+    <script type="text/javascript" src="${ctx}/js/jquery-2.1.1.min.js"></script>
+    <script src="${ctx}/js/iscroll.js"></script>
+    <link type="text/css" rel="stylesheet" href="${ctx}/css/style.css">
+    <script type="text/javascript">
+        $(function(){
+            fontSize();
+            $(window).on('resize',function(){
+                fontSize();
+            });
+            function fontSize(){
+                var winW = $(window).width();
+                var fontsize = winW/20;
+                if(winW>=320){
+                    $('html').css('font-size',fontsize);
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="bg">
+        <div id="wrapp" style="top: 0rem;bottom: 0.75rem;">
+            <div id="iscroller">
+                <div class="sel_type num04">
+                    <ul>
+                        <li><span onclick="window.location.href='${ctx}/bbook/tounDealBookOrders.htm'" >待处理</span></li>
+		                <li><span onclick="window.location.href='${ctx}/bbook/toConfirmBookOrders.htm'" >待确认</span></li>
+		                <li><span onclick="window.location.href='${ctx}/bbook/toUnCommentBookOrders.htm'" >待评价</span></li>
+		                <li><span onclick="window.location.href='${ctx}/bbook/toFinishedBookOrders.htm'" class="sel_bor">已结束</span></li>
+                    </ul>
+                </div>
+                <div class="book_list">
+                <#list bOrders as order>
+                        <div class="bookls booklsbg">
+                          <span class="bookimg" style="background: url(${order.bPublisher.book.imagesLarge});background-size: 100% 100%;"><!-- <img src="images/fogOrphan.png"> --></span>
+                           <div class="book_content">
+                               <ul>
+                                   <li>${order.bPublisher.book.title}</li>
+                                   <li>还书日期：${order.returnDate?string('yyyy-MM-dd')}</li>
+                                   <li class="borrow_info"><span>借阅价:<a><#if (order.bPublisher.lendFee)??>${order.bPublisher.lendFee}元<#else>免费</#if></a></span></li>
+                               </ul>
+                           </div>
+                           <span class="bookstate">
+                           <!-- <img src="${ctx}/images/shenqingzhong.png"> -->
+                           <#if order.status == 0>
+                                <img src="${ctx}/images/shenqingzhong.png">
+                                
+                                <#elseif order.status == 1>
+                                <p>传递中</p>
+                                <#elseif order.status == 2>
+                                <p>阅读中</p>
+                                <#elseif order.status == 3>
+                                <p>归还了</p>
+                                <#elseif order.status == 4>		
+                                <p>被拒绝</p>
+                               </#if>
+                           </span>
+                           <div class="btn_ord" onclick="javascript:window.location.href='${ctx}/bbook/toBookOrderDetail.htm?orderId=${order.orderId}'">书单详情</div>
+                           <div style="clear:both;"></div>
+                        </div>
+                    </#list>    
+                        
+                        
+                    </div>
+                </div>
+            </div>
+            <div id="pullUp">
+              <span class="pullUpIcon"></span><span class="pullUpLabel"></span>
+            </div> 
+        </div>
+    </div>
+    <div class="bottom_btn">
+        <ul>
+            <li onclick="javascript:window.location.href='${ctx}/bbook/toBookIndex.htm'"><a class="pageone"><img src="${ctx}/images/home_icon.png" /></a><a class="sel_btn">首页</a></li>
+            <li onclick="javascript:window.location.href='${ctx}/bbook/tounDealBookOrders.htm'"><a class="bookone"><img src="${ctx}/images/menu.png" /></a><a class="sel_btn">书单</a></li>
+            <li onclick="javascript:window.location.href='${ctx}/bbook/toDiscovery.htm'"><a class="bookfind"><img src="${ctx}/images/discover_icon.png" /></a><a class="sel_btn">发现</a></li>
+            <li onclick="javascript:window.location.href='${ctx}/bmember/toMemberCenter.htm'"><a class="bookmy"><img src="${ctx}/images/me_icon.png" /></a><a class="sel_btn">我的</a></li>
+        </ul>
+    </div>
+</body>
+<script>
+$(document).ready(function(){
+    var h = $("body").height();
+    $(".bg").css({"min-height":h});
+    $(".bottom_btn li").eq(1).find(".sel_btn").css("color","#ff6d33");
+
+    $(".bottom_btn li").click(function(){
+        $(".bottom_btn li").each(function(i){
+        switch(i){
+            case 0:
+               $(".pageone").find("img").attr("src","images/home_icon.png");
+               $(this).find(".sel_btn").css("color","#999999");
+            case 1:
+               $(".bookone").find("img").attr("src","images/menu_icon.png");
+               $(this).find(".sel_btn").css("color","#999999");
+            case 2:
+               $(".bookfind").find("img").attr("src","images/discover_icon.png"); 
+               $(this).find(".sel_btn").css("color","#999999");  
+            case 3:
+               $(".bookmy").find("img").attr("src","images/me_icon.png");
+               $(this).find(".sel_btn").css("color","#999999");
+            }
+        });
+        var src = $(this).find("img").attr("src").split("_")[0]+".png";
+            $(this).find("img").attr("src",src);
+            $(this).find(".sel_btn").css("color","#ff6d33");  
+    });
+});
+    var myScroll,
+    pullUpEl, pullUpOffset;
+function pullUpAction () {
+    setTimeout(function () {
+        var div, dl, i;
+        dl = $('.book_list')[0];
+
+        /* for (i=0; i<3; i++) {
+            div = document.createElement('div');
+            div.setAttribute('class','bookls booklsbg');
+            div.innerHTML ="<span class='bookimg'><img src='images/fogOrphan.png'></span>\
+                           <div class='book_content'>\
+                               <ul>\
+                                   <li>雾都孤儿</li>\
+                                   <li>还书日期：2015-09-24</li>\
+                                   <li class='borrow_info'><span>借阅价<a>免费</a></span><span>好评1928</span></li>\
+                               </ul>\
+                           </div>\
+                           <div style='clear:both;'></div>";
+                                              
+            dl.insertBefore(div, dl.lastchild);
+        } */
+        
+        myScroll.refresh();
+    }, 200);
+}
+
+function loaded() {
+    pullUpEl = document.getElementById('pullUp'); 
+    pullUpOffset = pullUpEl.offsetHeight;
+    
+    myScroll = new iScroll('wrapp', {
+        useTransition: true,
+        
+        onRefresh: function () {
+             if (pullUpEl.className.match('loading')) {
+                pullUpEl.className = '';
+                
+            }
+        },
+        onScrollMove: function () {
+            if (this.y < (this.maxScrollY - 5) && !pullUpEl.className.match('flip')) {
+                pullUpEl.className = 'flip';
+                
+                this.maxScrollY = this.maxScrollY;
+            } else if (this.y > (this.maxScrollY + 5) && pullUpEl.className.match('flip')) {
+                pullUpEl.className = '';
+                
+                this.maxScrollY = pullUpOffset;
+            }
+        },
+        onScrollEnd: function () {
+             if (pullUpEl.className.match('flip')) {
+                pullUpEl.className = 'loading';
+                                
+                pullUpAction(); // Execute custom function (ajax call?)
+            }
+        }
+    });
+    
+    setTimeout(function () { document.getElementById('wrapp').style.left = '0'; }, 800);
+}
+
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+
+document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 200); }, false);
+
+</script>
+</html>

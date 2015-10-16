@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <meta content="-1" http-equiv="Expires">
+    <meta content="no-cache" http-equiv="Cache-Control">
+    <meta content="no-cache" http-equiv="Pragma">
+    <title>还书</title>
+    <script type="text/javascript" src="${ctx}/js/jquery-2.1.1.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="${ctx}/css/style.css">
+    <script type="text/javascript">
+        $(function(){
+            fontSize();
+            $(window).on('resize',function(){
+                fontSize();
+            });
+            function fontSize(){
+                var winW = $(window).width();
+                var fontsize = winW/20;
+                if(winW>=320){
+                    $('html').css('font-size',fontsize);
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="bg">
+       <div class="borrow">
+            <a class="simg"></a>
+            <p class="mt01">您的书归还成功了啦，欢迎下次再借哦</p>
+        </div>
+        <div class="comment">
+            <span class="title">综合评价</span>
+            <div class="star">
+                <ul>
+                    <li><span><img src="${ctx}/images/Like.png"></span></li>
+                    <li><span><img src="${ctx}/images/Like.png"></span></li>
+                    <li><span><img src="${ctx}/images/Like.png"></span></li>
+                    <li><span><img src="${ctx}/images/Like.png"></span></li>
+                    <li><span><img src="${ctx}/images/Like2.png"></span></li>
+                </ul>
+            </div>
+            <form action="" method="post" class="form">
+                <p class="textinput">
+                    <label><textarea name="" cols="" rows="" class="text" maxlength="140">你的评论对主人很重要!</textarea></label>
+                </p>
+           </form>
+           <div class="bbtn02 mt02">发表评论</div>
+        </div>
+    </div>
+</body>
+<script>
+$(document).ready(function(){
+    var h = $("body").height();
+    $(".bg").css({"min-height":h});
+});
+</script>
+</html>
