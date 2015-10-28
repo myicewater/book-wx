@@ -26,7 +26,8 @@
         	        	"publishId":"${bPublisher.publishId}",
         	        	"location":"${bPublisher.member.bLocation.locationName}",
         	        	"borrowType":"${bPublisher.member.borrowType}",
-        	        	"borrowDays":"${bPublisher.lendDays}"
+        	        	"borrowDays":"${bPublisher.lendDays}",
+        	        	"borrowId":"${bPublisher.memberId}"
         	        },
         	        success: function(data){
         	           if(data.resultCode == "00"){

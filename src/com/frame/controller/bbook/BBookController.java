@@ -25,6 +25,7 @@ import com.frame.model.bbook.BBook;
 import com.frame.model.bpublisher.BPublisher;
 import com.frame.service.bauthor.BAuthorService;
 import com.frame.service.bbook.BBookService;
+import com.frame.service.bcredit.BCreditScoreService;
 import com.frame.service.bpulisher.BPublisherService;
 import com.frame.weixin.comfig.WeiXinConfig;
 
@@ -45,7 +46,8 @@ public class BBookController {
 	@Autowired
 	private BAuthorService bAuthorService;
 	
-	
+	@Autowired
+	private BCreditScoreService bCreditScoreService;
 	
 	/**
 	   *
@@ -213,7 +215,7 @@ public class BBookController {
 	
 	 @RequestMapping(value="/bbook/fetchBookInfo.htm")
 	 @ResponseBody
-	 public Map  fetchBookInfo(HttpServletRequest request,Model model){
+	 public Map  fetchBookInfo(HttpServletRequest request,Model model) {
 		 
 		 Map resultMap = new HashMap();
 		 
@@ -226,15 +228,23 @@ public class BBookController {
 			 resultMap.put("book", bookE);
 			 resultMap.put("resultCode", "00");
 		 }else{
-			 String douBanIsbnUrl = PropUtil.getValue("douBanIsbnUrl");
-			 String sr=HttpRequestUtil.sendGet(douBanIsbnUrl+isbn);
-			 logger.info("请求地址："+douBanIsbnUrl+isbn);
 			 
-		     BBook book = ClassGenerateUtil.generateBBook(sr);
-		     List<BAuthor> bauthors = ClassGenerateUtil.generateAuthor(sr) ;
-		     book.setBauthors(bauthors);
-		     resultMap.put("book", book);
-			 resultMap.put("resultCode", "00");
+				 String douBanIsbnUrl = PropUtil.getValue("douBanIsbnUrl");
+				 String sr=HttpRequestUtil.sendGet(douBanIsbnUrl+isbn);
+				 logger.info("请求地址："+douBanIsbnUrl+isbn);
+				 
+				 if(sr == null){
+					 logger.info("扫描异常，没有获取到图书信息。");
+					 resultMap.put("resultCode", "88");//没有获取到图书信息
+					 return resultMap;
+				 }
+				 
+			     BBook book = ClassGenerateUtil.generateBBook(sr);
+			     List<BAuthor> bauthors = ClassGenerateUtil.generateAuthor(sr) ;
+			     book.setBauthors(bauthors);
+			     resultMap.put("book", book);
+				 resultMap.put("resultCode", "00");
+			 
 		     
 		 }
 		 return resultMap;
@@ -278,6 +288,7 @@ public class BBookController {
 				 publisher.setLendFee(Double.valueOf(lendFee));
 				
 				 bPublisherService.addPublisher(publisher);
+				 bCreditScoreService.editCreditScore(memberId, 10, "1");
 			 }
 			 
 			 resultMap.put("resultCode", "00");
@@ -299,6 +310,8 @@ public class BBookController {
 			 publisher.setLendDays(Integer.valueOf(lendDays));
 			 publisher.setLendFee(Double.valueOf(lendFee));
 			 bPublisherService.addPublisher(publisher);
+			 
+			 bCreditScoreService.editCreditScore(memberId, 10, "1");
 			 
 			 //生成作者信息
 			 List<BAuthor> bauthors = ClassGenerateUtil.generateAuthor(sr, bookId) ;

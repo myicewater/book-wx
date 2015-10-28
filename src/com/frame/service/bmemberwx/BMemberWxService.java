@@ -29,4 +29,9 @@ public class BMemberWxService {
 	}
 	
 	
+	public BMemberwx getMemberWxByUserId(Integer memberId) {
+		// TODO Auto-generated method stub
+		return bMemberwxMapper.getMemberWxByUserId( memberId);
+	}
+	
 }

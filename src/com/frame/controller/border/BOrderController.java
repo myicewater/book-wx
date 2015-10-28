@@ -18,9 +18,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.frame.common.util.DateUtil;
 import com.frame.common.util.PropUtil;
 import com.frame.common.util.WeiXinJsUtil;
+import com.frame.model.bmemberwx.BMemberwx;
 import com.frame.model.border.BOrder;
+import com.frame.service.bcredit.BCreditScoreService;
+import com.frame.service.bmemberwx.BMemberWxService;
 import com.frame.service.border.BOrderService;
 import com.frame.weixin.comfig.WeiXinConfig;
+import com.frame.weixin.template.TemplateUtil;
 
 @Controller
 public class BOrderController {
@@ -28,6 +32,13 @@ public class BOrderController {
 	private static final Logger logger = LoggerFactory.getLogger(BOrderController.class);
 	@Autowired
 	private BOrderService bOrderService;
+	
+	
+	@Autowired
+	private BCreditScoreService bCreditScoreService;
+	
+	@Autowired
+	private BMemberWxService bMemberWxService;
 	
 	/**
 	   *
@@ -38,7 +49,7 @@ public class BOrderController {
 	  @RequestMapping(value="/border/buildBookOrder.htm")
 	  @ResponseBody
 	  public Map  buildBookOrder(HttpServletRequest request,Model model){
-	   Map resultMap = new HashMap();
+		  Map resultMap = new HashMap();
 	   
 	   	  String openId = (String)request.getSession().getAttribute("openId");
 	      Integer memberId = (Integer)request.getSession().getAttribute("memberId");
@@ -46,6 +57,7 @@ public class BOrderController {
 	      String location = request.getParameter("location");
 	      String borrowType = request.getParameter("borrowType");
 	      String borrowDays = request.getParameter("borrowDays");
+	      String borrowId = request.getParameter("borrowId");
 	      
 	      BOrder order = new BOrder();
 	      order.setBorrower(memberId);
@@ -58,6 +70,18 @@ public class BOrderController {
 	      order.setReturnDate(DateUtil.nextDate(new Date(), Integer.valueOf(borrowDays)));
 	      int result = bOrderService.addOrder(order);
 	      if(result >0 ){
+	    	  
+	    	 BMemberwx wx = bMemberWxService.getMemberWxByUserId(Integer.valueOf(borrowId));
+	    	 
+	    	 String title = "有人借你书了";
+	 		 String content = "点击去处理吧";
+	 		 String templateId = "UpdD76XBWd4XRFZK824fcU0gmbe5lEBUES1RFs2kmsM";
+	 		 String toUser = wx.getOpenId();
+	 		 String toUrl = "http://www.9fbank.com.cn";
+	 		 TemplateUtil.sendTemplateMsg(title, content, templateId, toUser, toUrl);
+	 		 
+	    	  bCreditScoreService.editCreditScore(memberId, -5, "2");
+	    	  bCreditScoreService.editCreditScore(Integer.valueOf(publishId), 5, "2");
 	    	  resultMap.put("resultCode", "00");
 	      }else{
 	    	  resultMap.put("resultCode", "99");
@@ -145,6 +169,31 @@ public class BOrderController {
 	       request.setAttribute("bOrders", bOrders);
 	       return "/border/undealed-order.html";
 	  }
+	  
+	  
+	  
+	  /**
+	   * 从模板消息跳转到待处理订单
+	   * @param request
+	   * @param model
+	   * @return
+	   */
+	  @RequestMapping(value="/bbook/tounDealBookOrdersFromTempMsg.htm")
+	  public String  tounDealBookOrdersFromTempMsg(HttpServletRequest request,Model model){
+	       WeiXinConfig config = WeiXinJsUtil.fetchConfig(request);
+	       request.setAttribute("config", config);
+	       
+	       String memberId = request.getParameter("memberId");
+	       BMemberwx wx = bMemberWxService.getMemberWxByUserId(Integer.valueOf(memberId));
+	       request.getSession().setAttribute("memberId", memberId);
+	       request.getSession().setAttribute("openId", wx.getOpenId());
+	       
+	       List<BOrder> bOrders = bOrderService.toDealBookOrders(Integer.valueOf(memberId));
+	       
+	       request.setAttribute("bOrders", bOrders);
+	       return "/border/undealed-order.html";
+	  }
+	  
 	  
 	  
 	  /**

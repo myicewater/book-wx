@@ -20,4 +20,6 @@ public interface BMemberwxMapper {
     BMemberwx getMemberWxByOpenId(String openId);
 
 	int cancelBind(Map paramMap);
+
+	BMemberwx getMemberWxByUserId(Integer memberId);
 }

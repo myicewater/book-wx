@@ -21,6 +21,11 @@
   <update id="cancelBind">
      update b_memberwx set member_id = null where open_id=#{openId}
   </update>
+  
+  <select id="getMemberWxByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+  SELECT * FROM b_memberwx t where t.member_id=#{memberId}
+  </select>
+  
     <select id="getMemberWxByOpenId" resultMap="BaseResultMap" parameterType="java.lang.String" >
   select 
     <include refid="Base_Column_List" />

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.frame.dao.bcredit.BCreditScoreChangeInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.frame.model.bcredit.BCreditScoreChangeInfo" >
+    <id column="change_id" property="changeId" jdbcType="INTEGER" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="change_score" property="changeScore" jdbcType="INTEGER" />
+    <result column="change_des" property="changeDes" jdbcType="CHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    change_id, member_id, change_score, change_des, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_credit_score_change_info
+    where change_id = #{changeId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_credit_score_change_info
+    where change_id = #{changeId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.frame.model.bcredit.BCreditScoreChangeInfo" >
+    insert into b_credit_score_change_info (change_id, member_id, change_score, 
+      change_des, create_time)
+    values (#{changeId,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{changeScore,jdbcType=INTEGER}, 
+      #{changeDes,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.frame.model.bcredit.BCreditScoreChangeInfo" >
+    insert into b_credit_score_change_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="changeId != null" >
+        change_id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="changeScore != null" >
+        change_score,
+      </if>
+      <if test="changeDes != null" >
+        change_des,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="changeId != null" >
+        #{changeId,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="changeScore != null" >
+        #{changeScore,jdbcType=INTEGER},
+      </if>
+      <if test="changeDes != null" >
+        #{changeDes,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.frame.model.bcredit.BCreditScoreChangeInfo" >
+    update b_credit_score_change_info
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="changeScore != null" >
+        change_score = #{changeScore,jdbcType=INTEGER},
+      </if>
+      <if test="changeDes != null" >
+        change_des = #{changeDes,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where change_id = #{changeId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.frame.model.bcredit.BCreditScoreChangeInfo" >
+    update b_credit_score_change_info
+    set member_id = #{memberId,jdbcType=INTEGER},
+      change_score = #{changeScore,jdbcType=INTEGER},
+      change_des = #{changeDes,jdbcType=CHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where change_id = #{changeId,jdbcType=INTEGER}
+  </update>
+</mapper>

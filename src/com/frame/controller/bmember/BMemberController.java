@@ -7,6 +7,8 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import oracle.net.aso.f;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import com.frame.common.util.WeiXinJsUtil;
 import com.frame.model.bcode.BCode;
 import com.frame.model.bmember.BMember;
 import com.frame.service.bcode.BCodeService;
+import com.frame.service.bcredit.BCreditScoreService;
 import com.frame.service.bmember.BMemberService;
 import com.frame.weixin.comfig.WeiXinConfig;
 import com.frame.weixin.util.MD5Util;
@@ -35,6 +38,10 @@ public class BMemberController {
 	
 	@Autowired
 	private BCodeService bCodeService;
+	
+	
+	@Autowired
+	private BCreditScoreService bCreditScoreService;
 	
 	
 	/**
@@ -296,7 +303,7 @@ public class BMemberController {
 		
 		int result = bMemberService.memberRegister(bMember,openId);
 		if(result >0){
-			
+			bCreditScoreService.regEditScore(result);
 			request.getSession().setAttribute("memberId",result);////设置session的memberId，用于用户免登陆
 			
 			resultMap.put("resultCode", "00");//注册成功

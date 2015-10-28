@@ -274,6 +274,8 @@ public class ReturnCode {
     	ignoreUrls.add("/bbook/toBookIndex.htm");
     	ignoreUrls.add("/winxin");
     	ignoreUrls.add("/weixin/loadWeixinMenue.htm");
+    	ignoreUrls.add("/templateTest.htm");
+    	
     	
     }
     

@@ -91,8 +91,8 @@
   </update>
   
   <select id="getBookDetail" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-  	select t.*,b.*,m.*, l.*
-  	from b_publisher t join b_book b on t.book_id=b.book_id
+  	select  t.*,b.*,m.*, l.*
+  	from b_publisher t  join b_book b on t.book_id=b.book_id
   	join b_member m on t.member_id=m.member_id
   	left join b_location l on t.member_id =l.member_id
   	where t.publish_id=#{publishId}
@@ -109,11 +109,10 @@
   
   <select id="getBooks" resultMap="BaseResultMap" parameterType="java.util.HashMap">
   	select t.*,b.*,m.*, l.*
-  	from b_publisher t join b_book b on t.book_id=b.book_id
+  	from (select * from b_publisher t where t.is_used = 1 limit #{listNum} ) t join b_book b on t.book_id=b.book_id
   	join b_member m on t.member_id=m.member_id
   	left join b_location l on t.member_id =l.member_id
-  	where t.is_used = 1
-  	limit #{listNum} 
+  	
   </select>
   
   <select id="getBooksByKewWord" resultMap="BaseResultMap" parameterType="java.lang.String">

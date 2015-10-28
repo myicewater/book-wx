@@ -34,7 +34,7 @@
         	    scanType: ["qrCode"], // 可以指定扫二维码还是一维码，默认二者都有
         	    success: function (res) {
         	    	var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-        	    	alert(result)
+        	    	//alert(result)
         		}
         	});
         }
@@ -47,7 +47,7 @@
         	    	var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
         	    	var strs= new Array(); //定义一数组 
         	    	strs=result.split(","); //字符分割 
-        	    	alert(strs[1])
+        	    	//alert(strs[1])
         	    	var url = "${ctx}/bbook/fetchBookInfo.htm";
         	    	 $.ajax({
         	    	  type: "post",
@@ -131,9 +131,9 @@
 
 function publishBook(){
 	var r = /^\d+(\.\d+)?$/;
-	alert($("#lendFee").val())
+	//alert($("#lendFee").val())
 	var result = r.test($("#lendFee").val())
-	alert(result)
+	//alert(result)
 	if(!result){
 		alert("请输入正确借书价格")
 		return
@@ -149,10 +149,20 @@ function publishBook(){
 	         "lendFee":$("#lendFee").val()
 	        },
 	        success: function(data){
+	        	//alert(data.resultCode)
 	           if(data.resultCode == '00'){
 	        	  alert("发布成功")
 	        	  window.location.href='${ctx}/bbook/getMyBooks.htm' 
 	           }
+	        },
+	        error:function(XMLHttpRequest, textStatus, errorThrown){
+	        	
+	        	alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+	        },
+	        complete:function(XMLHttpRequest, textStatus){
+	        	//alert(textStatus)
 	        }
 	 });
 }

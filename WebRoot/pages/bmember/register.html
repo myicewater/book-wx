@@ -86,7 +86,7 @@ function checkRegInfo(){
 		dataType:"json",
 		success:function(data){
 			if(data.resultCode == "00"){
-				alert("邀请码正确")
+				//alert("邀请码正确")
 				
 				//注册
 				$.ajax({
@@ -100,7 +100,7 @@ function checkRegInfo(){
 					dataType:"json",
 					success:function(data){
 						if(data.resultCode == "00"){
-							//alert("注册成功")
+							alert("恭喜您注册成功，获得100书币。")
 							window.location.href="${ctx}/bbook/toBookIndex.htm"
 						}else{
 							alert("注册失败")

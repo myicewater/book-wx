@@ -11,10 +11,10 @@
 	
     <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/wx_book" userId="root" password="root" />
    
-    <javaModelGenerator targetPackage="com.frame.model.bcomment" targetProject="book-wx" />
-    <sqlMapGenerator targetPackage="com.frame.dao.bcomment" targetProject="book-wx" />
-   <javaClientGenerator targetPackage="com.frame.dao.bcomment" targetProject="book-wx" type="XMLMAPPER" /> 
-    <table schema=""  tableName="b_comment" enableSelectByExample="false" enableDeleteByExample="false" enableCountByExample="false" enableUpdateByExample="false" >
+    <javaModelGenerator targetPackage="com.frame.model.bcredit" targetProject="book-wx" />
+    <sqlMapGenerator targetPackage="com.frame.dao.bcredit" targetProject="book-wx" />
+   <javaClientGenerator targetPackage="com.frame.dao.bcredit" targetProject="book-wx" type="XMLMAPPER" /> 
+    <table schema=""  tableName="b_credit_score" enableSelectByExample="false" enableDeleteByExample="false" enableCountByExample="false" enableUpdateByExample="false" >
     <!-- <property name="useActualColumnNames" value="true" /> -->
     </table>
   </context>
